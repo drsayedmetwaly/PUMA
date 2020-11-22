@@ -225,7 +225,7 @@
   {
     Load_CSV <-read.csv(CSV_File, sep=",", check.names=TRUE, stringsAsFactors=FALSE, comment.char="")
 
-    #rearrange data columns/eclude columns
+    #rearrange data columns/exclude columns
     if (is.null(excludeColNo)){
       csv.data<-Load_CSV[,c(idCol,classCol, c(1:ncol(Load_CSV))[-c(idCol,classCol)])]
     } else {
