@@ -22,8 +22,7 @@
                    spin_duration = 30,
                    spin_fps=20,
                    spin_startTime = 0,
-                   output3DFileName,
-                   ...
+                   output3DFileName
 
                    ) {
 

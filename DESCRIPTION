@@ -1,11 +1,10 @@
 Package: PUMA
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Probabilistic Universal Model Approximator (PUMA)
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Sayed Metwaly
+Maintainer: The package maintainer <sayed.metwaly@abdn.ac.uk>
+Description: A function for 3D visualization of decision boundary for classification algorithms. Classification models are built using MLR. PUMA plots a 3D scatter plot of the PCA scores. PUMA then acquires each possible point on the selected PCA coordinates (PCA grid) and reverse it to the original variables scale. The classification model is then utilized to predict the class of each PCA grid point and generates the probability for such assignment. A 3D contor is then projected using grid points with 0.5 probability to demarcate the decision boundary.
+License: MTI
 Encoding: UTF-8
 LazyData: true
