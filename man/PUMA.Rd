@@ -4,11 +4,11 @@
 \title{Probabilistic Universal Model Approximator (PUMA)}
 \description{
 A function for 3D visualization of decision boundary for classification algorithms. Classification models are built using MLR. PUMA plots a 3D scatter plot of the PCA scores. PUMA then acquires each possible point on the selected PCA coordinates (PCA grid) and reverse it to the original variables scale. The classification model is then utilized to predict the class of each PCA grid point and generates the probability for such assignment. A 3D contor is then projected using grid points with 0.5 probability to demarcate the decision boundary.
-}
+
 \usage{
 PUMA(inputData, learner, task, measures = mmce, override_defaulat_ploting_PCs = NULL, cv = 10L, pointsize = 2, grp.cols = c("darkblue", "green", "darkred"), LearnerName = toupper(getLearnerShortName(learner)), contours3D, contours3Dcolors, engine3D = "rgl", material3D = "default", showTitles = TRUE, spin_axisXYZ = c(0, 0, 1), spin_duration = 30, spin_fps = 20, spin_startTime = 0, output3DFileName)
 }
-%- maybe also 'usage' for other objects documented here.
+
 \arguments{
   \item{inputData}{
 Data set with sample ID as row names, variables (metabolites) as columns and class column is the last column in the data set.
@@ -66,25 +66,29 @@ Start time of spinning of the 3D plot
 }
   \item{output3DFileName}{
 The file to be used for saving 3D animation
+
 }
-}
-}
+
 \details{
 The built-in function \code{\link{loadcsv}} can import data sets from csv files and prepare them for use in PUMA. PUMA 3D plots are interactive and can be manipulated using the mouse. The function \code{\link{snapshot}} can be used to take a snapshot of the current view.
 }
+
 \references{
 \url{https://github.com/drsayedmetwaly/PUMA}
 }
+
 \author{
 Sayed Metwaly, \email{sayed.metwaly@@abdn.ac.uk}
 }
+
 \note{
 PUMA depends on the following packages devtools, mlr, checkmate, Hmisc, rgl, misc3d and sinkr. The built-in function \code{\link{installdep}} can be used to install all the required packages before running PUMA for the first time. ImageMagick installation is required to save animations as animated GIF files
 }
 
 \seealso{
-\code{\link{loadcsv}}, \code{\link{installdep}} and \code{\link{snapshot}}.
+The built-in function \code{\link{loadcsv}} can import data sets from csv files and prepare them for use in PUMA. PUMA 3D plots are interactive and can be manipulated using the mouse. The function \code{\link{snapshot}} can be used to take a snapshot of the current view.
 }
+
 \examples{
 ## Load libraries
 library(PUMA)
@@ -99,8 +103,14 @@ trainTask <- makeClassifTask(data = PUMA_Example_Dataset1, target = "Class")
 
 ## Fit a PLS-DA model, plot it, do animation and save the output as an animated GIF file
 PUMA(learner = "classif.plsdaCaret", measures=mmce, task = trainTask, inputData = PUMA_Example_Dataset1, cv=7, pointsize=2, grp.cols=c("orangered","blueviolet"), LearnerName="Partial Least Squares Discriminant Analysis (PLS-DA)", contours3D=1, contours3Dcolors="green", engine3D="rgl", material3D="default", showTitles=TRUE, spin_axisXYZ=c(0, 0, 1), spin_duration=30, spin_fps=20, spin_startTime=0, output3DFileName="PUMA3D")
+}
 
 
  \keyword{ ~PUMA }
  \keyword{ ~PCA reversal }
  \concept{ ~PCA Probabilistic mapping }
+
+ \keyword{ ~PUMA }
+ \keyword{ ~PCA reversal }
+ \concept{ ~PCA Probabilistic mapping }
+
