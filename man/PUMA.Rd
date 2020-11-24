@@ -70,6 +70,7 @@ Start time of spinning of the 3D plot
   \item{output3DFileName}{
 The file to be used for saving 3D animation
 }
+}
 
 \details{
 The built-in function \code{\link{loadcsv}} can import data sets from csv files and prepare them for use in PUMA. PUMA 3D plots are interactive and can be manipulated using the mouse. The function \code{\link{snapshot}} can be used to take a snapshot of the current view.
