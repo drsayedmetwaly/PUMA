@@ -5,7 +5,7 @@
 \title{Probabilistic Universal Model Approximator (PUMA)}
 
 \description{
-A function for 3D visualization of decision boundary of classification algorithms. Classification models are built using the versatile MLR library. PUMA plots a 3D scatter plot of the PCA scores. PUMA then calculates the coordinates of all the points present in the 3D PCA space (PCA 3D grid). Matrix manipulation is utilized to reverse PCA 3D grid coordinadtes from the principal components (PCs) domain back to the original variables (metabolites) scale. PUMA then uses the trained classification model to predict the class assignment of the reversed PCA 3D grid points and estimate the probability for such class assignment. Once completed, this step effectively generates a probabilistic map containing the probability of class assignment at each point of the entire PCA 3D space. PUMA finally overlays a 3D contor to join points in the 3D PCA space that have 0.5 probability of class assignment and as such demarcate the decision boundary of the classification algorithm.
+A function for 3D visualization of decision boundary of classification algorithms. Classification models are built using the versatile MLR library. PUMA plots a 3D scatter plot of the PCA scores. PUMA then calculates the coordinates of all the points present in the 3D PCA space (PCA 3D grid). Matrix manipulation is utilized to reverse PCA 3D grid coordinates from the principal components (PCs) domain back to the original variables (metabolites) scale. PUMA then uses the trained classification model to predict the class assignment of the reversed PCA 3D grid points and estimate the probability for such class assignment. Once completed, this step effectively generates a probabilistic map containing the probability of class assignment at each point of the entire PCA 3D space. PUMA finally overlays a 3D contour to join points in the 3D PCA space that have 0.5 probability of class assignment and as such demarcate the decision boundary of the classification algorithm.
 }
 
 \usage{
@@ -35,7 +35,7 @@ The number of cross validations (max 10).
 The size of points (scores) in the 3D PCA plot.
 }
   \item{grp.cols}{
-Groups colours
+Groups colors
 }
   \item{LearnerName}{
 By default LearnerName is the classification algorithm name. This is used in the plot title.
@@ -44,16 +44,16 @@ By default LearnerName is the classification algorithm name. This is used in the
 The required numbers of decision boundaries. By default one decision boundary at 0.5 probability of class assignment is used.
 }
   \item{contours3Dcolors}{
-Colour of the 3D contours used to demarcate the decision boundary
+Color of the 3D contours used to demarcate the decision boundary
 }
   \item{engine3D}{
 By default "rgl" engine is used. Other alternatives include "standard" and "grid".
 }
   \item{material3D}{
-This argument is required only for "standard" and "grid" engines 3D 3ngines. Possible values are the character strings "dull", "shiny", "metal", and "default"
+This argument is required only for "standard" and "grid" engines 3D engines. Possible values are the character strings "dull", "shiny", "metal", and "default"
 }
   \item{showTitles}{
-By default showTitles is ture and this shows the title and subtile in the 3D plot.
+By default showTitles is TRUE and this shows the title and subtitle in the 3D plot.
 }
   \item{spin_axisXYZ}{
 Defines the axes used for rotating the final PUMA 3D plot. Formula: c(X,Y,Z) for each axis 0=No, 1=Yes.
