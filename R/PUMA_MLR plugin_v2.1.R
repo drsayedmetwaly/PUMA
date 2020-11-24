@@ -3,11 +3,6 @@
 #
 #A function for 3D visualization of decision boundary for classification algorithms
 
-#---------------------------------------------------------------------------------------
-#Note: make sure the input data set groups are present in the 2nd column named Class
-#---------------------------------------------------------------------------------------
-
-
 
   PUMA = function( inputData, learner, task, measures=mmce,
                    override_defaulat_ploting_PCs=NULL,
