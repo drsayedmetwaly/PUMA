@@ -1,4 +1,4 @@
-\name{PUMA}
+\name{Probabilistic Universal Model Approximator}
 
 \alias{PUMA}
 
@@ -14,7 +14,7 @@ PUMA(inputData, learner, task, measures = mmce, override_defaulat_ploting_PCs = 
 
 \arguments{
   \item{inputData}{
-Data set with sample ID as row names, variables (metabolites) as columns and class column is the last column in the data set.
+Data set with sample ID as row names, variables (metabolites) as columns and a "Class" column containing groups at the last column of the data set. Data sets in CSV files can be imported using the built-in function \code{\link{loadcsv}}.
 }
   \item{learner}{
 MLR learner. This parameter defines the model (classification algorithm) of interest.
@@ -26,7 +26,7 @@ MLR task. This parameter defines the data set and classes to be used by the clas
 MLR measures. This parameter defines the method used for assessing performance of the classification algorithm.
 }
   \item{override_defaulat_ploting_PCs}{
-By default PUMA uses principle components PC1, PC2 and PC3 for plotting. If other PCs are required for plotting instead they can be entered here.
+By default PUMA uses principle components PC1, PC2 and PC3 for plotting. If other set of PCs are required for plotting instead they can be entered here.
 }
   \item{cv}{
 The number of cross validations (max 10).
@@ -73,7 +73,7 @@ The file to be used for saving 3D animation
 }
 
 \details{
-The built-in function \code{\link{loadcsv}} can import data sets from csv files and prepare them for use in PUMA. PUMA 3D plots are interactive and can be manipulated using the mouse. The function \code{\link{snapshot}} can be used to take a snapshot of the current view.
+The built-in function \code{\link{loadcsv}} can import data sets from CSV files and prepare them for direct use in PUMA. PUMA 3D plots are interactive and can be manipulated using the mouse. The built-in function \code{\link{snapshot}} can be used to take a snapshot of the current view.
 }
 
 \references{
@@ -85,11 +85,11 @@ Sayed Metwaly, \email{sayed.metwaly@@abdn.ac.uk}
 }
 
 \note{
-PUMA depends on the following packages devtools, mlr, checkmate, Hmisc, rgl, misc3d and sinkr. The built-in function \code{\link{installdep}} can be used to install all the required packages before running PUMA for the first time. ImageMagick installation is required to save animations as animated GIF files
+PUMA depends on the following packages devtools, mlr, checkmate, Hmisc, rgl, misc3d and sinkr. The built-in function \code{\link{installdep}} can be used to install all the required dependency packages before running PUMA for the first time. ImageMagick installation is required to save animations as animated GIF files.
 }
 
 \seealso{
-The built-in function \code{\link{loadcsv}} can import data sets from csv files and prepare them for use in PUMA. PUMA 3D plots are interactive and can be manipulated using the mouse. The function \code{\link{snapshot}} can be used to take a snapshot of the current view.
+\code{\link{installdep}}, \code{\link{loadcsv}}, \code{\link{snapshot}}
 }
 
 \examples{
