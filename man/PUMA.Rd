@@ -69,7 +69,6 @@ Start time of spinning of the 3D plot
 }
   \item{output3DFileName}{
 The file to be used for saving 3D animation
-
 }
 
 \details{
