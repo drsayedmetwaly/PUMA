@@ -5,7 +5,7 @@
 \title{Probabilistic Universal Model Approximator (PUMA)}
 
 \description{
-A function for 3D visualization of decision boundary of classification algorithms. Classification models are built using the versatile MLR library. PUMA plots a 3D scatter plot of the PCA scores. PUMA then calculates the coordinates of all the points present in the 3D PCA space (PCA 3D grid). Matrix manipulation is utilized to reverse PCA 3D grid coordinates from the principal components (PCs) domain back to the original variables (metabolites) scale. PUMA then uses the trained classification model to predict the class assignment of the reversed PCA 3D grid points and estimate the probability for such class assignment. Once completed, this step effectively generates a probabilistic map containing the probability of class assignment at each point of the entire PCA 3D space. PUMA finally overlays a 3D contour to join points in the 3D PCA space that have 0.5 probability of class assignment and as such demarcate the decision boundary of the classification algorithm.
+PUMA is a function for 3D visualization of the decision boundary of classification algorithms.
 }
 
 \usage{
@@ -73,7 +73,7 @@ The file to be used for saving 3D animation
 }
 
 \details{
-The built-in function \code{\link{loadcsv}} can import data sets from CSV files and prepare them for direct use in PUMA. PUMA 3D plots are interactive and can be manipulated using the mouse. The built-in function \code{\link{snapshot}} can be used to take a snapshot of the current view.
+Classification models are initally fitted using the versatile MLR library. PCA transformation of the data set is performed and a 3D scatter plot of the PCA scores is plotted using the principal components (PCs) of choice. PUMA then calculates the coordinates of all the points present in the 3D PCA space (PCA 3D grid). Matrix manipulation is carried out to reverse all PCA 3D grid points from the principal components (PCs) domain back to the original variables (metabolites) scale. PUMA then uses the trained classification model to predict the class assignment of the reversed PCA 3D grid points and estimate the probability of class assignment at each point. Once completed, this step has effectively generated a probabilistic map containing the probability of class assignment at each point of the entire PCA 3D space. PUMA finally overlays a 3D contour to join points in the 3D PCA space that have 0.5 probability of class assignment and as such demarcate the decision boundary of the classification algorithm.
 }
 
 \references{
@@ -86,6 +86,8 @@ Sayed Metwaly, \email{sayed.metwaly@@abdn.ac.uk}
 
 \note{
 PUMA depends on the following packages devtools, mlr, checkmate, Hmisc, rgl, misc3d and sinkr. The built-in function installdep() can be used to install all the required dependency packages before running PUMA for the first time. Installation of ImageMagick program is required to save PUMA animations as animated GIF files.
+The built-in function \code{\link{loadcsv}} can import data sets from CSV files and prepare them for direct use in PUMA. PUMA 3D plots are interactive and can be manipulated using the mouse. The built-in function \code{\link{snapshot}} can be used to take a snapshot of the current view.
+
 }
 
 \seealso{

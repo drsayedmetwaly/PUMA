@@ -6,7 +6,7 @@
 snapshot
 }
 \description{
-%%  ~~ A concise (1-5 lines) description of what the function does. ~~
+Snapshot can be used to take a snapshot of the current PUMA 3D view and save it as a PNG image.
 }
 \usage{
 snapshot(output3DFileName)
@@ -14,54 +14,24 @@ snapshot(output3DFileName)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{output3DFileName}{
-%%     ~~Describe \code{output3DFileName} here~~
+The path for the PNG image to be saved. It should be provided as a character vector: "C:/Datasets/puma3d.png"
 }
 }
-\details{
-%%  ~~ If necessary, more details than the description above ~~
-}
-\value{
-%%  ~Describe the value returned
-%%  If it is a LIST, use
-%%  \item{comp1 }{Description of 'comp1'}
-%%  \item{comp2 }{Description of 'comp2'}
-%% ...
-}
+
 \references{
-%% ~put references to the literature/web site here ~
+\url{https://github.com/drsayedmetwaly/PUMA}
 }
 \author{
-%%  ~~who you are~~
+Sayed Metwaly, \email{sayed.metwaly@@abdn.ac.uk}
 }
-\note{
-%%  ~~further notes~~
-}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
+\code{\link{PUMA}}
 }
 \examples{
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
+## Save current PUMA 3D view in as a PNG image
 
-## The function is currently defined as
-function (output3DFileName)
-{
-    timeStamp <- strftime(Sys.time(), "\%Y-\%m-\%d_\%H.\%M.\%S")
-    FileNameSuffix = sprintf("_\%s", timeStamp)
-    snapshot3d(paste(output3DFileName, FileNameSuffix, ".png",
-        sep = ""))
-  }
+snapshot("C:/PUMA/picture.png")
+
 }
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory (show via RShowDoc("KEYWORDS")):
-% \keyword{ ~kwd1 }
-% \keyword{ ~kwd2 }
-% Use only one keyword per line.
-% For non-standard keywords, use \concept instead of \keyword:
-% \concept{ ~cpt1 }
-% \concept{ ~cpt2 }
-% Use only one concept per line.
+
