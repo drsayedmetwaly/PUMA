@@ -96,44 +96,34 @@ The built-in function \code{\link{loadcsv}} can import data sets from csv files 
 
 ## Example 1: Fit a PLS-DA model and plot it using PUMA
 
-## Load libraries
 library(PUMA)
 library(mlr)
 
-## Create an mlr task
 trainTask <- makeClassifTask(data = PUMA_Example_Dataset1, target = "Class")
 
-## Fit a PLS-DA model, plot it, do animation and save the output as an animated GIF file
 PUMA(learner = "classif.plsdaCaret", measures=mmce, task = trainTask, inputData = PUMA_Example_Dataset1, cv=7, pointsize=2, grp.cols=c("orangered","blueviolet"), LearnerName="Partial Least Squares Discriminant Analysis (PLS-DA)", contours3D=1, contours3Dcolors="green", engine3D="rgl", material3D="default", showTitles=TRUE, spin_axisXYZ=c(0, 0, 1), spin_duration=30, spin_fps=20, spin_startTime=0, output3DFileName="PUMA3D")
 
 
 
 ## Example 2: Fit an RF model and plot it using PUMA
 
-## Load libraries
 library(PUMA)
 library(mlr)
 
-## Create an mlr task
 trainTask <- makeClassifTask(data = PUMA_Example_Dataset2, target = "Class")
 
-## Fit an RF model, plot it, do animation and save the output as an animated GIF file
 PUMA(learner = "classif.randomForest", measures=mmce, task = trainTask, inputData = PUMA_Example_Dataset2, cv=7, pointsize=2, grp.cols=c("orangered","blueviolet"), LearnerName="Random Forest (RF)", contours3D=1, contours3Dcolors="green", engine3D="rgl", material3D="default", showTitles=TRUE, spin_axisXYZ=c(0, 0, 1), spin_duration=30, spin_fps=20, spin_startTime=0, output3DFileName="PUMA3D")
 
 
 
 ## Example 3: Fit an SVM (polynomial kernel) model and plot it using PUMA
 
-## Load libraries
 library(PUMA)
 library(mlr)
 
-## Create an mlr task
 trainTask <- makeClassifTask(data = PUMA_Example_Dataset1, target = "Class")
 
-## Fit an SVM (polynomial kernel) model, plot it, do animation and save the output as an animated GIF file
 PUMA(learner = makeLearner("classif.svm", kernel = "polynomial"), measures=mmce, task = trainTask, inputData = PUMA_Example_Dataset1, cv=7, pointsize=2, grp.cols=c("orangered","blueviolet"), LearnerName="Support Vector Machine (SVM) with a polynomial kernel", contours3D=1, contours3Dcolors="green", engine3D="rgl", material3D="default", showTitles=TRUE, spin_axisXYZ=c(0, 0, 1), spin_duration=30, spin_fps=20, spin_startTime=0, output3DFileName="PUMA3D")
-
 
 }
 
