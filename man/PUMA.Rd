@@ -5,7 +5,7 @@
 \title{Probabilistic Universal Model Approximator (PUMA)}
 
 \description{
-A function for 3D visualization of decision boundary for classification algorithms. Classification models are built using MLR. PUMA plots a 3D scatter plot of the PCA scores. PUMA then acquires each possible point on the selected PCA coordinates (PCA grid) and reverse it to the original variables scale. The classification model is then utilized to predict the class of each PCA 3D grid point and generates the probability for such assignment. A 3D contor is then projected using grid points with 0.5 probability to demarcate the decision boundary.
+A function for 3D visualization of decision boundary for classification algorithms. Classification models are built using the versatile MLR library. PUMA plots a 3D scatter plot of the PCA scores. PUMA then calculates the coordinates of all the points present in the 3D PCA space (PCA 3D grid). Matrix manipulation is utilized to reverse PCA 3D grid coordinadtes from the principal components (PCs) domain back to the original variables (metabolites) scale. PUMA then uses the trained classification model to predict the class assignment of the reversed PCA 3D grid points and estimate the probability for such class assignment. Once completed, this step effectively generates a probabilistic map containing the probability of class assignment at each point of the entire PCA 3D space. PUMA finally overlays a 3D contor to join points in the 3D PCA space that have 0.5 probability of class assignment and as such demarcate the decision boundary of the classification algorithm.
 }
 
 \usage{
