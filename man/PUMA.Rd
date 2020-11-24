@@ -5,7 +5,7 @@
 \title{Probabilistic Universal Model Approximator (PUMA)}
 
 \description{
-A function for 3D visualization of decision boundary for classification algorithms. Classification models are built using the versatile MLR library. PUMA plots a 3D scatter plot of the PCA scores. PUMA then calculates the coordinates of all the points present in the 3D PCA space (PCA 3D grid). Matrix manipulation is utilized to reverse PCA 3D grid coordinadtes from the principal components (PCs) domain back to the original variables (metabolites) scale. PUMA then uses the trained classification model to predict the class assignment of the reversed PCA 3D grid points and estimate the probability for such class assignment. Once completed, this step effectively generates a probabilistic map containing the probability of class assignment at each point of the entire PCA 3D space. PUMA finally overlays a 3D contor to join points in the 3D PCA space that have 0.5 probability of class assignment and as such demarcate the decision boundary of the classification algorithm.
+A function for 3D visualization of decision boundary of classification algorithms. Classification models are built using the versatile MLR library. PUMA plots a 3D scatter plot of the PCA scores. PUMA then calculates the coordinates of all the points present in the 3D PCA space (PCA 3D grid). Matrix manipulation is utilized to reverse PCA 3D grid coordinadtes from the principal components (PCs) domain back to the original variables (metabolites) scale. PUMA then uses the trained classification model to predict the class assignment of the reversed PCA 3D grid points and estimate the probability for such class assignment. Once completed, this step effectively generates a probabilistic map containing the probability of class assignment at each point of the entire PCA 3D space. PUMA finally overlays a 3D contor to join points in the 3D PCA space that have 0.5 probability of class assignment and as such demarcate the decision boundary of the classification algorithm.
 }
 
 \usage{
@@ -85,11 +85,11 @@ Sayed Metwaly, \email{sayed.metwaly@@abdn.ac.uk}
 }
 
 \note{
-PUMA depends on the following packages devtools, mlr, checkmate, Hmisc, rgl, misc3d and sinkr. The built-in function \code{\link{installdep}} can be used to install all the required dependency packages before running PUMA for the first time. ImageMagick installation is required to save animations as animated GIF files.
+PUMA depends on the following packages devtools, mlr, checkmate, Hmisc, rgl, misc3d and sinkr. The built-in function installdep() can be used to install all the required dependency packages before running PUMA for the first time. Installation of ImageMagick program is required to save PUMA animations as animated GIF files.
 }
 
 \seealso{
-\code{\link{installdep}}, \code{\link{loadcsv}}, \code{\link{snapshot}}
+\code{\link{loadcsv}}, \code{\link{snapshot}}
 }
 
 \examples{
