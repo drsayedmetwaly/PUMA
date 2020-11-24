@@ -22,7 +22,7 @@ The path for the PNG image to be saved. It should be provided as a character vec
 \url{https://github.com/drsayedmetwaly/PUMA}
 }
 \author{
-Sayed Metwaly, \email{sayed.metwaly@@abdn.ac.uk}
+Sayed Metwaly, \email{sayed.metwaly@abdn.ac.uk}
 }
 
 \seealso{

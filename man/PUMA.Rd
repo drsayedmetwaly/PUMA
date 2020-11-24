@@ -81,7 +81,7 @@ Classification models are initally fitted using the versatile MLR library. PCA t
 }
 
 \author{
-Sayed Metwaly, \email{sayed.metwaly@@abdn.ac.uk}
+Sayed Metwaly, \email{sayed.metwaly@abdn.ac.uk}
 }
 
 \note{

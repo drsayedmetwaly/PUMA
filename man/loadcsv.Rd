@@ -34,7 +34,7 @@ PUMA data sets have specific format with observations (samples) in rows and vari
 \url{https://github.com/drsayedmetwaly/PUMA}
 }
 \author{
-Sayed Metwaly, \email{sayed.metwaly@@abdn.ac.uk}
+Sayed Metwaly, \email{sayed.metwaly@abdn.ac.uk}
 }
 
 
