@@ -117,7 +117,7 @@ library(mlr)
 trainTask <- makeClassifTask(data = PUMA_Example_Dataset2, target = "Class")
 
 ## Fit an RF model, plot it, do animation and save the output as an animated GIF file
-PUMA(learner = "classif.randomForest", measures=mmce, task = trainTask, inputData = PUMA_Example_Dataset1, cv=7, pointsize=2, grp.cols=c("orangered","blueviolet"), LearnerName="Random Forest (RF)", contours3D=1, contours3Dcolors="green", engine3D="rgl", material3D="default", showTitles=TRUE, spin_axisXYZ=c(0, 0, 1), spin_duration=30, spin_fps=20, spin_startTime=0, output3DFileName="PUMA3D")
+PUMA(learner = "classif.randomForest", measures=mmce, task = trainTask, inputData = PUMA_Example_Dataset2, cv=7, pointsize=2, grp.cols=c("orangered","blueviolet"), LearnerName="Random Forest (RF)", contours3D=1, contours3Dcolors="green", engine3D="rgl", material3D="default", showTitles=TRUE, spin_axisXYZ=c(0, 0, 1), spin_duration=30, spin_fps=20, spin_startTime=0, output3DFileName="PUMA3D")
 
 
 
@@ -137,7 +137,7 @@ PUMA(learner = makeLearner("classif.svm", kernel = "polynomial"), measures=mmce,
 }
 
 
-\keyword{ Probabilistic Universal Model Approximator (PUMA) }
+\keyword{ PUMA }
 \keyword{ PCA reversal }
 \concept{ PCA Probabilistic mapping }
 
