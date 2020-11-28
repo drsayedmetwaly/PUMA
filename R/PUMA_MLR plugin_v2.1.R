@@ -258,7 +258,7 @@
               type = "gif", startTime = spin_startTime, dir = getwd())
     } else {
       play3d(spin3d(axis = spin_axisXYZ), duration = spin_duration,
-              fps=spin_fps)
+             startTime = spin_startTime)
 
     }
   }
