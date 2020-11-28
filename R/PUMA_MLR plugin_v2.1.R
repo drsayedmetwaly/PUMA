@@ -189,7 +189,7 @@
 
 
             if (spin_duration>0){
-              movie3d(spin3d(axis = spin_axisXYZ), duration = spin_duration,
+              play3d(spin3d(axis = spin_axisXYZ), duration = spin_duration,
                       fps=spin_fps,movie = paste(output3DFileName,FileNameSuffix,sep=""), frames = output3DFileName,
                       convert = TRUE, clean = TRUE, verbose = FALSE,top = TRUE,
                       type = "gif", startTime = spin_startTime, dir = getwd())
@@ -241,5 +241,24 @@
   snapshot<-function(output3DFileName){
     timeStamp <-  strftime(Sys.time(),"%Y-%m-%d_%H.%M.%S")
     FileNameSuffix = sprintf("_%s",timeStamp)
+
     snapshot3d(paste(output3DFileName,FileNameSuffix,".png",sep=""))
+  }
+
+#--------------------------------------------------------------------------------------
+  animation<-function(spin_axisXYZ=c(0, 0, 1), spin_duration=30, spin_fps=20, spin_startTime=0, output3DFileName=NULL){
+    timeStamp <-  strftime(Sys.time(),"%Y-%m-%d_%H.%M.%S")
+    FileNameSuffix = sprintf("_%s",timeStamp)
+
+    if (!is.null(output3DFileName)){
+      movie3d(spin3d(axis = spin_axisXYZ), duration = spin_duration,
+              fps=spin_fps,movie = paste(output3DFileName,FileNameSuffix,sep=""),
+              frames = output3DFileName,
+              convert = TRUE, clean = TRUE, verbose = FALSE,top = TRUE,
+              type = "gif", startTime = spin_startTime, dir = getwd())
+    } else {
+      play3d(spin3d(axis = spin_axisXYZ), duration = spin_duration,
+              fps=spin_fps)
+
+    }
   }
