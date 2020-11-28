@@ -86,12 +86,12 @@ Sayed Metwaly, \email{sayed.metwaly@abdn.ac.uk}
 
 \note{
 PUMA depends on the following packages devtools, mlr, checkmate, Hmisc, rgl, misc3d and sinkr. The built-in function installdep() can be used to install all the required dependency packages before running PUMA for the first time. Installation of ImageMagick program is required to save PUMA animations as animated GIF files.
-The built-in function \code{\link{loadcsv}} can import data sets from CSV files and prepare them for direct use in PUMA. PUMA 3D plots are interactive and can be manipulated using the mouse. The built-in function \code{\link{snapshot}} can be used to take a snapshot of the current view.
+The built-in function \code{\link{loadcsv}} can import data sets from CSV files and prepare them for direct use in PUMA. PUMA 3D plots are interactive and can be manipulated using the mouse. The built-in function \code{\link{snapshot}} can be used to take a snapshot of the current view. The function \code{\link{animation}} makes 3D spining rotations of the PUMA visualization and can save them as animated GIF files. Installation of ImageMagick program is required to save PUMA animations as animated GIF files. If the PUMA visualization window is closed, it will not be possible to make animations or take snapshots.
 
 }
 
 \seealso{
-\code{\link{loadcsv}}, \code{\link{snapshot}}
+\code{\link{loadcsv}}, \code{\link{snapshot}}, \code{\link{animation}}
 }
 
 \examples{

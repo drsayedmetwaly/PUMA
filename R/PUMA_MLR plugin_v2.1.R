@@ -17,7 +17,7 @@
                    spin_duration = 30,
                    spin_fps=20,
                    spin_startTime = 0,
-                   output3DFileName
+                   output3DFileName = NULL
 
                    ) {
 
@@ -183,20 +183,18 @@
           legend3d("topright", legend = paste(td$class.levels), pch = 19,
                    col = pointsColor, cex=1, inset=c(0.02))
 
-          if (!missing(output3DFileName)){
-            timeStamp <-  strftime(Sys.time(),"%Y-%m-%d_%H.%M.%S")
-            FileNameSuffix = sprintf("_%s_%s", toupper(getLearnerShortName(learner)),timeStamp)
 
+            if (spin_duration=0){
+              snapshot(output3DFileName=output3DFileName)
 
-            if (spin_duration>0){
-              play3d(spin3d(axis = spin_axisXYZ), duration = spin_duration,
-                      fps=spin_fps,movie = paste(output3DFileName,FileNameSuffix,sep=""), frames = output3DFileName,
-                      convert = TRUE, clean = TRUE, verbose = FALSE,top = TRUE,
-                      type = "gif", startTime = spin_startTime, dir = getwd())
             }else{
-              snapshot3d(paste(output3DFileName,FileNameSuffix,".png",sep=""))
+              animation(spin_axisXYZ=spin_axisXYZ,
+                        spin_duration=spin_duration,
+                        spin_fps=spin_fps,
+                        spin_startTime=spin_startTime,
+                        output3DFileName=output3DFileName)
             }
-          }
+
 
 
 
@@ -242,7 +240,9 @@
     timeStamp <-  strftime(Sys.time(),"%Y-%m-%d_%H.%M.%S")
     FileNameSuffix = sprintf("_%s",timeStamp)
 
+    if(!is.null(output3DFileName)){
     snapshot3d(paste(output3DFileName,FileNameSuffix,".png",sep=""))
+    }
   }
 
 #--------------------------------------------------------------------------------------

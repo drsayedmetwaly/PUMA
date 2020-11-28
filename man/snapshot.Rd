@@ -6,7 +6,7 @@
 snapshot
 }
 \description{
-Snapshot can be used to take a snapshot of the current PUMA 3D view and save it as a PNG image.
+Snapshot can be used to take a snapshot of the current PUMA 3D view and save it as a PNG image. If the PUMA visualization window is closed, it will not be possible to make animations or take snapshots.
 }
 \usage{
 snapshot(output3DFileName)
@@ -14,7 +14,7 @@ snapshot(output3DFileName)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{output3DFileName}{
-The path for the PNG image to be saved. It should be provided as a character vector: "C:/Datasets/puma3d.png"
+The path for the PNG image to be saved. It must not contain spaces. It should be provided as a character vector: "C:/Datasets/puma3d.png"
 }
 }
 
