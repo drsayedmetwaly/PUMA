@@ -184,7 +184,7 @@
                    col = pointsColor, cex=1, inset=c(0.02))
 
 
-            if (spin_duration=0){
+            if (spin_duration==0){
               snapshot(output3DFileName=output3DFileName)
 
             }else{
