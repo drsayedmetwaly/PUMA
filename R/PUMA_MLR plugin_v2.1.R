@@ -206,7 +206,11 @@
 #--------------------------------------------------------------------------------------
 
   installdep<-function(){
-    install.packages(c("mlr","checkmate","Hmisc","rgl","misc3d"))
+    install.packages(c("mlr","checkmate","Hmisc","rgl","misc3d", "caret", "plsdepot",
+                       "pls", "randomForest", "mda", "bst", "adabag", "glmnet",
+                       "deepnet", "SwarmSVM", "gbm", "MASS", "nnet", "deepnet",
+                       "xgboost", "kernlab", "survival","RWeka", "rpart","fpc",
+                       "FNN", "h2o", "gbm", "klaR", "modeltools"))
     library(devtools)
     devtools::install_github("marchtaylor/sinkr", force = TRUE)
 
