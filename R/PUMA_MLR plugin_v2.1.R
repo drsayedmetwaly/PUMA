@@ -69,7 +69,7 @@
           }
           perMat<-cbind(perMat, Dist)
           perMat<-perMat[order(perMat[,"Dist"],decreasing=TRUE),]
-          PCs <-colnames(pcaScores[,perMat[1,]])
+          PCs <-colnames(pcaScores[,perMat[1,1:taskdim]])
 
         }else {
           PCs <- toupper(override_default_ploting_PCs)
