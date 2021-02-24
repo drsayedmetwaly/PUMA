@@ -61,15 +61,22 @@
           S2 = pcaScores[which(pcaScores$Class!=td$class.levels[1]),]
 
           library(arrangements)
-          if (f.no > 1000){combNo=1000}else{combNo=f.no}
+          if (length(All.PCs) > 1000){combNo=1000}else{combNo=length(All.PCs)}
           perMat<-combinations(combNo, taskdim) #Max 2000 PCs (2000 metabolites)
           Dist<-vector(length = nrow(perMat))
           for (i in 1:nrow(perMat)){
-            Dist[i]<-D.sq(S1[,perMat[i,]],S2[,perMat[i,]])[['D.sq']]
+            tryCatch(
+              {
+                Dist[i]<-D.sq(S1[,perMat[i,]],S2[,perMat[i,]])[['D.sq']]
+              },
+              error = function(e) {}
+
+            )
+
           }
           perMat<-cbind(perMat, Dist)
           perMat<-perMat[order(perMat[,"Dist"],decreasing=TRUE),]
-          PCs <-colnames(pcaScores[,perMat[1,1:taskdim]])
+          PCs <-colnames(pcaScores[,perMat[1,c(1:taskdim)]])
 
         }else {
           PCs <- toupper(override_default_ploting_PCs)
