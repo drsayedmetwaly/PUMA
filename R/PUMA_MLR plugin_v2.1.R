@@ -1,11 +1,16 @@
 #-------------------------------------------------------------------------------------
+# Package variables
+#
+maxD2 <- "maximal.Mahalanobis.D2.Distance"
+
+#-------------------------------------------------------------------------------------
 #Probabilistic Universal Model Approximator (PUMA)
 #
 #A function for 3D visualization of decision boundary for classification algorithms
 
 
   PUMA = function( inputData, learner, task, measures=mmce,
-                   override_defaulat_ploting_PCs=NULL,
+                   override_default_ploting_PCs=NULL,
                    cv = 10L,
                    pointsize = 2,
                    grp.cols = c("darkblue", "green", "darkred"),
@@ -38,7 +43,7 @@
     features = getTaskFeatureNames(task)
     f.no = length(features)
     if (f.no==0) stopf("No features (metabolites) were input. Exiting...")
-    if (f.no<3) stopf("Too few features/metabolites. PUMA algorithm is designed for 3D visualization of multivariate models (3 or more features/metabolites). Exiting...")
+    if (f.no<3) stopf("Too few features/metabolites. PUMA algorithm is designed for 2D/3D visualization of multivariate models (3 or more features/metabolites). Exiting...")
 
     taskdim=3
 
@@ -52,10 +57,29 @@
 
       pcaScores$Class<-as.factor(PCA_Class)
 
-      if (is.null(override_defaulat_ploting_PCs)){
+      if (is.null(override_default_ploting_PCs)){
         PCs <- c("PC1","PC2","PC3")
       }else{
-        PCs <-override_defaulat_ploting_PCs
+        if (override_default_ploting_PCs==maxD2){
+
+          S1 = pcaScores[which(pcaScores$Class==td$class.levels[1]),]
+          S2 = pcaScores[which(pcaScores$Class!=td$class.levels[1]),]
+
+          library(arrangements)
+          if (f.no > 1000){combNo=1000}else{combNo=f.no}
+          perMat<-combinations(combNo, taskdim) #Max 2000 PCs (2000 metabolites)
+          Dist<-vector(length = nrow(perMat))
+          for (i in 1:nrow(perMat)){
+            Dist[i]<-D.sq(S1[,perMat[i,]],S2[,perMat[i,]])[['D.sq']]
+          }
+          perMat<-cbind(perMat, Dist)
+          perMat<-perMat[order(perMat[,"Dist"],decreasing=TRUE),]
+          PCs <-colnames(pcaScores[,perMat[1,]])
+
+        }else {
+          PCs <- toupper(override_default_ploting_PCs)
+        }
+
       }
 
       unusedPCs<-setdiff(All.PCs,PCs)
@@ -210,7 +234,7 @@
                        "pls", "randomForest", "mda", "bst", "adabag", "glmnet",
                        "deepnet", "SwarmSVM", "gbm", "MASS", "nnet", "deepnet",
                        "xgboost", "kernlab", "survival","RWeka", "rpart","fpc",
-                       "FNN", "h2o", "gbm", "klaR", "modeltools"))
+                       "FNN", "h2o", "gbm", "klaR", "modeltools", "ICSNP"))
     library(devtools)
     devtools::install_github("marchtaylor/sinkr", force = TRUE)
 
@@ -265,4 +289,21 @@
              startTime = spin_startTime)
 
     }
+  }
+
+#--------------------------------------------------------------------------------------
+# Mahalanobis Distance calculation Function from https://stackoverflow.com/a/34708113/5731401
+# Custom function to calculate Mahalanobis distance between 2 groups centroids
+  D.sq <- function (g1, g2) {
+    dbar <- as.vector(colMeans(g1) - colMeans(g2))
+    S1 <- cov(g1)
+    S2 <- cov(g2)
+    n1 <- nrow(g1)
+    n2 <- nrow(g2)
+    V <- as.matrix((1/(n1 + n2 - 2)) * (((n1 - 1) * S1) + ((n2 - 1) * S2)))
+    D.sq <- t(dbar) %*% solve(V) %*% dbar
+    res <- list()
+    res$D.sq <- D.sq
+    res$V <- V
+    res
   }
