@@ -1,23 +1,28 @@
 #-------------------------------------------------------------------------------------
 #Probabilistic Universal Model Approximator (PUMA)
 #
-#A function for 3D visualization of decision boundary for classification algorithms
+#A function for 2D/3D visualization of decision boundary for classification algorithms
 
 
   PUMA = function( inputData, learner, task, measures=mmce,
                    override_default_ploting_PCs=NULL,
                    cv = 10L,
+                   plot_dimensions=3,
                    pointsize = 2,
                    grp.cols = c("darkblue", "green", "darkred"),
                    LearnerName=toupper(getLearnerShortName(learner)),
                    contours3D, contours3Dcolors, engine3D="rgl",
                    material3D="default",
-                   showTitles=TRUE,
-                   spin_axisXYZ = c(0, 0, 1),
-                   spin_duration = 30,
-                   spin_fps=20,
-                   spin_startTime = 0,
-                   output3DFileName = NULL
+                   showTitles3D=TRUE,
+                   spin3D_axisXYZ = c(0, 0, 1),
+                   spin3D_duration = 30,
+                   spin3D_fps=20,
+                   spin3D_startTime = 0,
+                   output3DFileName = NULL,
+                   prob.alpha2D = TRUE, se.band2D = TRUE,
+                   err.mark2D = "train",
+                   err.col2D = "white", err.size2D = pointsize,
+
 
                    ) {
 
@@ -40,7 +45,15 @@
     if (f.no==0) stopf("No features (metabolites) were input. Exiting...")
     if (f.no<3) stopf("Too few features/metabolites. PUMA algorithm is designed for 2D/3D visualization of multivariate models (3 or more features/metabolites). Exiting...")
 
-    taskdim=3
+    assertNumber(plot_dimensions,
+                 na.ok = FALSE,
+                 lower = 2,
+                 upper = 3,
+                 finite = FALSE,
+                 null.ok = FALSE,
+                 add = NULL)
+
+    taskdim=plot_dimensions
 
       PCA_Class<-inputData$Class
       PCA_DataSet<-inputData[,-c(inputData_ClassCol)]
@@ -53,7 +66,7 @@
       pcaScores$Class<-as.factor(PCA_Class)
 
       if (is.null(override_default_ploting_PCs)){
-        PCs <- c("PC1","PC2","PC3")
+        PCs <- c("PC1","PC2","PC3")[1:taskdim]
       }else{
         if (override_default_ploting_PCs=="maxD2"){
 
@@ -62,7 +75,7 @@
 
           library(arrangements)
           if (length(All.PCs) > 1000){combNo=1000}else{combNo=length(All.PCs)}
-          perMat<-combinations(combNo, taskdim) #Max 2000 PCs
+          perMat<-combinations(combNo, taskdim)
           Dist<-vector(length = nrow(perMat), mode = "numeric")
           for (i in 1:nrow(perMat)){
             tryCatch(
@@ -84,11 +97,26 @@
 
       }
 
+
+        if ((length(unique(PCs %nin% All.PCs))==1 && unique(PCs %nin% All.PCs)==TRUE) || length(unique(PCs %nin% All.PCs))>1
+            #PCs %nin% All.PCs
+            ) {
+          stopf("Principal component [%s] does not exist.",
+                  paste(PCs[PCs %nin% All.PCs], collapse=", ") )
+              }
+
       unusedPCs<-setdiff(All.PCs,PCs)
 
     cv = asCount(cv)
 
     assertNumber(pointsize, lower = 1)
+    assertFlag(prob.alpha2D)
+    assertFlag(se.band2D)
+    assertChoice(err.mark2D, choices = c("train", "cv", "none"))
+    assertString(err.col2D)
+    assertNumber(err.size2D, lower = 1)
+    #assertLogical(greyscale)
+
 
     task = subsetTask(task, features = features)
     learner = setHyperPars(learner)
@@ -111,6 +139,103 @@
       perf.cv = NA_real_
     }
 
+
+    if (taskdim==2L){
+
+      x1n = PCs[1L]
+      x1 = pcaScores[, x1n]
+
+      x2n = PCs[2L]
+      x2 = pcaScores[, x2n]
+
+      gridsize=100
+
+      xs <- seq(min(x1), max(x1), length.out = gridsize)
+      ys <- seq(min(x2), max(x2), length.out = gridsize)
+
+      grid = expand.grid(xs,ys)
+      colnames(grid) = PCs
+
+      grid2=grid
+      for (i in 1:length(unusedPCs)){
+        grid2$newCol<-0
+        colnames(grid2)[ncol(grid2)]<-unusedPCs[i]
+      }
+      grid2<-as.matrix(grid2[,All.PCs])
+      reversedMat<-t(t(grid2 %*% t(pcaTransform$rotation)) * pcaTransform$scale+ pcaTransform$center)
+
+      reversedDF<-as.data.frame(reversedMat)
+      colnames(reversedDF)<-features
+
+      pred.grid = predict(mod, newdata = reversedDF)
+
+      grid[, target] = pred.grid$data$response
+
+      if (hasLearnerProperties(learner, "prob")) {
+        grid$value = pred.grid$data[,1]
+      }else{
+        grid$value = as.numeric(as.factor(pred.grid$data[,1]))-1
+      }
+
+##################
+
+        data$.err = if (err.mark == "train")
+          y != yhat
+        else if (err.mark == "cv")
+          y != pred.cv$data[order(pred.cv$data$id), "response"]
+
+
+          p = ggplot(grid, aes_string(x = x1n, y = x2n))
+          if (hasLearnerProperties(learner, "prob") && prob.alpha) {
+            # max of rows is prob for selected class
+            prob = apply(getPredictionProbabilities(pred.grid, cl = td$class.levels), 1, max)
+            grid$.prob.pred.class = prob
+            p = p + geom_tile(data = grid, mapping = aes_string(fill = target, alpha = ".prob.pred.class"),
+                              show.legend = TRUE)
+            p = p + scale_alpha(limits = range(grid$.prob.pred.class))
+          } else {
+            p = p + geom_tile(mapping = aes_string(fill = target))
+          }
+          # print normal points ####################################################
+          p = p + geom_point(data = subset(data, !data$.err),
+                             mapping = aes_string(x = x1n, y = x2n, shape = target), size = pointsize)
+          # mark incorrect points
+          if (err.mark != "none" && any(data$.err)) {
+            p = p + geom_point(data = subset(data, data$.err),
+                               mapping = aes_string(x = x1n, y = x2n, shape = target),
+                               size = err.size + 1.5, show.legend = FALSE)
+            p = p + geom_point(data = subset(data, data$.err),
+                               mapping = aes_string(x = x1n, y = x2n, shape = target),
+                               size = err.size + 1, col = err.col, show.legend = FALSE)
+          }
+          # print error points
+          p = p + geom_point(data = subset(data, data$.err),
+                             mapping = aes_string(x = x1n, y = x2n, shape = target), size = err.size, show.legend = FALSE)
+          p  = p + guides(alpha = FALSE)
+
+          ######control 2D background colors ########
+          p = p + scale_fill_manual(values = grp.cols)
+
+
+          title = sprintf("%s: %s", LearnerName, paramValueToString(learner$par.set, learner$par.vals))
+          title = sprintf("%s\nTrain: %s; CV: %s", title, paste(names(perf.train),": ",perf.train, sep=""),
+                          paste(names(perf.cv),": ",perf.cv, sep=""))
+          p = p + ggtitle(title)
+
+
+          return(p)
+
+
+
+##################
+
+      }
+
+
+
+
+
+    if (taskdim==3L){
       x1n = PCs[1L]
       x1 = pcaScores[, x1n]
 
@@ -134,7 +259,7 @@
         grid2$newCol<-0
         colnames(grid2)[ncol(grid2)]<-unusedPCs[i]
       }
-      grid2<-as.matrix(grid2)
+      grid2<-as.matrix(grid2[,All.PCs])
       reversedMat<-t(t(grid2 %*% t(pcaTransform$rotation)) * pcaTransform$scale+ pcaTransform$center)
 
       reversedDF<-as.data.frame(reversedMat)
@@ -200,7 +325,7 @@
           axes3d(edges = "bbox", labels = TRUE, tick = TRUE,
                  box = TRUE, expand = 1.03)
 
-          if (showTitles==TRUE){
+          if (showTitles3D==TRUE){
             title3d(title, subtitle, xlab, ylab, zlab)
           } else {
             title3d("", "", xlab, ylab, zlab)
@@ -210,21 +335,19 @@
                    col = pointsColor, cex=1, inset=c(0.02))
 
 
-            if (spin_duration==0){
+            if (spin3D_duration==0){
               snapshot(output3DFileName=output3DFileName)
 
             }else{
-              animation(spin_axisXYZ=spin_axisXYZ,
-                        spin_duration=spin_duration,
-                        spin_fps=spin_fps,
-                        spin_startTime=spin_startTime,
+              animation(spin3D_axisXYZ=spin3D_axisXYZ,
+                        spin3D_duration=spin3D_duration,
+                        spin3D_fps=spin3D_fps,
+                        spin3D_startTime=spin3D_startTime,
                         output3DFileName=output3DFileName)
             }
 
 
-
-
-
+          }
 
   }
 
@@ -276,19 +399,19 @@
   }
 
 #--------------------------------------------------------------------------------------
-  animation<-function(spin_axisXYZ=c(0, 0, 1), spin_duration=30, spin_fps=20, spin_startTime=0, output3DFileName=NULL){
+  animation<-function(spin3D_axisXYZ=c(0, 0, 1), spin3D_duration=30, spin3D_fps=20, spin3D_startTime=0, output3DFileName=NULL){
     timeStamp <-  strftime(Sys.time(),"%Y-%m-%d_%H.%M.%S")
     FileNameSuffix = sprintf("_%s",timeStamp)
 
     if (!is.null(output3DFileName)){
-      movie3d(spin3d(axis = spin_axisXYZ), duration = spin_duration,
-              fps=spin_fps,movie = paste(output3DFileName,FileNameSuffix,sep=""),
+      movie3d(spin3d(axis = spin3D_axisXYZ), duration = spin3D_duration,
+              fps=spin3D_fps,movie = paste(output3DFileName,FileNameSuffix,sep=""),
               frames = output3DFileName,
               convert = TRUE, clean = TRUE, verbose = FALSE,top = TRUE,
-              type = "gif", startTime = spin_startTime, dir = getwd())
+              type = "gif", startTime = spin3D_startTime, dir = getwd())
     } else {
-      play3d(spin3d(axis = spin_axisXYZ), duration = spin_duration,
-             startTime = spin_startTime)
+      play3d(spin3d(axis = spin3D_axisXYZ), duration = spin3D_duration,
+             startTime = spin3D_startTime)
 
     }
   }
