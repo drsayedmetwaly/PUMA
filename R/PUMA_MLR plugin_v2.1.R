@@ -62,8 +62,8 @@
 
           library(arrangements)
           if (length(All.PCs) > 1000){combNo=1000}else{combNo=length(All.PCs)}
-          perMat<-combinations(combNo, taskdim) #Max 2000 PCs (2000 metabolites)
-          Dist<-vector(length = nrow(perMat))
+          perMat<-combinations(combNo, taskdim) #Max 2000 PCs
+          Dist<-vector(length = nrow(perMat), mode = "numeric")
           for (i in 1:nrow(perMat)){
             tryCatch(
               {
