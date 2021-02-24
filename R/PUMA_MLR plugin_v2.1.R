@@ -69,7 +69,8 @@
       if (is.null(override_default_ploting_PCs)){
         PCs <- c("PC1","PC2","PC3")[1:taskdim]
       }else{
-        if (override_default_ploting_PCs=="maxD2"){
+        override_default_ploting_PCs<-toupper(override_default_ploting_PCs)
+        if (override_default_ploting_PCs=="MAXD2"){
 
           S1 = pcaScores[which(pcaScores$Class==td$class.levels[1]),]
           S2 = pcaScores[which(pcaScores$Class!=td$class.levels[1]),]
@@ -93,7 +94,7 @@
           PCs <-colnames(pcaScores[,perMat[1,c(1:taskdim)]])
 
         }else {
-          PCs <- toupper(override_default_ploting_PCs)
+          PCs <- override_default_ploting_PCs
         }
 
       }
