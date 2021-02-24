@@ -117,7 +117,6 @@
     assertChoice(err.mark2D, choices = c("train", "cv", "none"))
     assertString(err.col2D)
     assertNumber(err.size2D, lower = 1)
-    #assertLogical(greyscale)
 
 
     task = subsetTask(task, features = features)
@@ -181,9 +180,9 @@
 
 ##################
 
-        data$.err = if (err.mark2D == "train")
+      pcaScores$.err = if (err.mark2D == "train")
           y != yhat
-        else if (err.mark == "cv")
+        else if (err.mark2D == "cv")
           y != pred.cv$data[order(pred.cv$data$id), "response"]
 
 
@@ -199,19 +198,19 @@
             p = p + geom_tile(mapping = aes_string(fill = target))
           }
           # print normal points ####################################################
-          p = p + geom_point(data = subset(data, !data$.err),
+          p = p + geom_point(data = subset(pcaScores, !pcaScores$.err),
                              mapping = aes_string(x = x1n, y = x2n, shape = target), size = pointsize)
           # mark incorrect points
-          if (err.mark2D != "none" && any(data$.err)) {
-            p = p + geom_point(data = subset(data, data$.err),
+          if (err.mark2D != "none" && any(pcaScores$.err)) {
+            p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
                                mapping = aes_string(x = x1n, y = x2n, shape = target),
                                size = err.size2D + 1.5, show.legend = FALSE)
-            p = p + geom_point(data = subset(data, data$.err),
+            p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
                                mapping = aes_string(x = x1n, y = x2n, shape = target),
                                size = err.size2D + 1, col = err.col2D, show.legend = FALSE)
           }
           # print error points
-          p = p + geom_point(data = subset(data, data$.err),
+          p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
                              mapping = aes_string(x = x1n, y = x2n, shape = target), size = err.size2D, show.legend = FALSE)
           p  = p + guides(alpha = FALSE)
 
