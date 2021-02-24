@@ -179,14 +179,14 @@
 
 ##################
 
-        data$.err = if (err.mark == "train")
+        data$.err = if (err.mark2D == "train")
           y != yhat
         else if (err.mark == "cv")
           y != pred.cv$data[order(pred.cv$data$id), "response"]
 
 
           p = ggplot(grid, aes_string(x = x1n, y = x2n))
-          if (hasLearnerProperties(learner, "prob") && prob.alpha) {
+          if (hasLearnerProperties(learner, "prob") && prob.alpha2D) {
             # max of rows is prob for selected class
             prob = apply(getPredictionProbabilities(pred.grid, cl = td$class.levels), 1, max)
             grid$.prob.pred.class = prob
@@ -200,17 +200,17 @@
           p = p + geom_point(data = subset(data, !data$.err),
                              mapping = aes_string(x = x1n, y = x2n, shape = target), size = pointsize)
           # mark incorrect points
-          if (err.mark != "none" && any(data$.err)) {
+          if (err.mark2D != "none" && any(data$.err)) {
             p = p + geom_point(data = subset(data, data$.err),
                                mapping = aes_string(x = x1n, y = x2n, shape = target),
-                               size = err.size + 1.5, show.legend = FALSE)
+                               size = err.size2D + 1.5, show.legend = FALSE)
             p = p + geom_point(data = subset(data, data$.err),
                                mapping = aes_string(x = x1n, y = x2n, shape = target),
-                               size = err.size + 1, col = err.col, show.legend = FALSE)
+                               size = err.size2D + 1, col = err.col2D, show.legend = FALSE)
           }
           # print error points
           p = p + geom_point(data = subset(data, data$.err),
-                             mapping = aes_string(x = x1n, y = x2n, shape = target), size = err.size, show.legend = FALSE)
+                             mapping = aes_string(x = x1n, y = x2n, shape = target), size = err.size2D, show.legend = FALSE)
           p  = p + guides(alpha = FALSE)
 
           ######control 2D background colors ########
