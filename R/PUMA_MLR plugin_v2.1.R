@@ -1,9 +1,4 @@
 #-------------------------------------------------------------------------------------
-# Package variables
-#
-maxD2 <- "maximal.Mahalanobis.D2.Distance"
-
-#-------------------------------------------------------------------------------------
 #Probabilistic Universal Model Approximator (PUMA)
 #
 #A function for 3D visualization of decision boundary for classification algorithms
@@ -60,7 +55,7 @@ maxD2 <- "maximal.Mahalanobis.D2.Distance"
       if (is.null(override_default_ploting_PCs)){
         PCs <- c("PC1","PC2","PC3")
       }else{
-        if (override_default_ploting_PCs==maxD2){
+        if (override_default_ploting_PCs=="maxD2"){
 
           S1 = pcaScores[which(pcaScores$Class==td$class.levels[1]),]
           S2 = pcaScores[which(pcaScores$Class!=td$class.levels[1]),]
