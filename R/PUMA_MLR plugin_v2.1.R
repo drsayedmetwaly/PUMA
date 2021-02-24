@@ -29,6 +29,7 @@
     library(mlr)
     library(checkmate)
     library(Hmisc)
+    library(BBmisc)
     library(sinkr)
     library(rgl)
     library(misc3d)
@@ -359,7 +360,7 @@
                        "pls", "randomForest", "mda", "bst", "adabag", "glmnet",
                        "deepnet", "SwarmSVM", "gbm", "MASS", "nnet", "deepnet",
                        "xgboost", "kernlab", "survival","RWeka", "rpart","fpc",
-                       "FNN", "h2o", "gbm", "klaR", "modeltools", "ICSNP"))
+                       "FNN", "h2o", "gbm", "klaR", "modeltools", "ICSNP", "BBmisc"))
     library(devtools)
     devtools::install_github("marchtaylor/sinkr", force = TRUE)
 
