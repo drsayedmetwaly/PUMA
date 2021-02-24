@@ -21,7 +21,7 @@
                    output3DFileName = NULL,
                    prob.alpha2D = TRUE, se.band2D = TRUE,
                    err.mark2D = "train",
-                   err.col2D = "white", err.size2D = pointsize,
+                   err.col2D = "white", err.size2D = pointsize
 
 
                    ) {
