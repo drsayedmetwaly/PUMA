@@ -178,17 +178,30 @@
         grid$value = as.numeric(as.factor(pred.grid$data[,1]))-1
       }
 
-##################
 
+      if (missing(grp.cols)){
+        pointsColor <- val2col(as.numeric(as.factor(data$Class))-1,
+                               col=jetPal(length(unique(data$Class))),
+                               zlim=as.numeric(as.factor(data$Class))-1)
+      }else{
+        pointsColor <- grp.cols[1:length(unique(data$Class))]
+      }
+
+      backgColor <- sapply(pointsColor, lighten, USE.NAMES=FALSE)
+
+
+      # Define error points
       pcaScores$.err = if (err.mark2D == "train")
           y != yhat
         else if (err.mark2D == "cv")
           y != pred.cv$data[order(pred.cv$data$id), "response"]
 
 
+          # Initialize plot object p
           p = ggplot(grid, aes_string(x = x1n, y = x2n))
-          if (hasLearnerProperties(learner, "prob") && prob.alpha2D) {
 
+          # Define background transparency
+          if (hasLearnerProperties(learner, "prob") && prob.alpha2D) {
             prob = apply(getPredictionProbabilities(pred.grid, cl = td$class.levels), 1, max)
             grid$.prob.pred.class = prob
             p = p + geom_tile(data = grid, mapping = aes_string(fill = target, alpha = ".prob.pred.class"),
@@ -198,24 +211,36 @@
             p = p + geom_tile(mapping = aes_string(fill = target))
           }
 
+          # Plot correctly predicted points
           p = p + geom_point(data = subset(pcaScores, !pcaScores$.err),
-                             mapping = aes_string(x = x1n, y = x2n, shape = target), size = pointsize)
+                             mapping = aes_string(x = x1n, y = x2n, color  = target),
+                             size = pointsize)
+          p = p + scale_color_manual(values=pointsColor)
 
+          # Plot error points
+          p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
+                             mapping = aes_string(x = x1n, y = x2n, color  = target ),
+                             size = err.size2D, show.legend = FALSE)
+          p = p + scale_color_manual(values=pointsColor)
+
+
+          # Mark error points
           if (err.mark2D != "none" && any(pcaScores$.err)) {
+            # p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
+            #                    mapping = aes_string(x = x1n, y = x2n),
+            #                    size = err.size2D + 1.5, show.legend = FALSE)
+            # p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
+            #                    mapping = aes_string(x = x1n, y = x2n),
+            #                    size = err.size2D + 1, col = err.col2D, show.legend = FALSE)
             p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
-                               mapping = aes_string(x = x1n, y = x2n, shape = target),
-                               size = err.size2D + 1.5, show.legend = FALSE)
-            p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
-                               mapping = aes_string(x = x1n, y = x2n, shape = target),
-                               size = err.size2D + 1, col = err.col2D, show.legend = FALSE)
+                               mapping = aes_string(x = x1n, y = x2n),
+                               size = err.size2D, shape=13, col = err.col2D)
           }
-          # print error points
-          #p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
-          #                   mapping = aes_string(x = x1n, y = x2n, shape = target), size = err.size2D, show.legend = FALSE)
+
           p  = p + guides(alpha = FALSE)
 
 
-          p = p + scale_fill_manual(values = grp.cols)
+          p = p + scale_fill_manual(values = backgColor)
 
 
           title = sprintf("%s: %s", LearnerName, paramValueToString(learner$par.set, learner$par.vals))
@@ -429,3 +454,24 @@
     res$V <- V
     res
   }
+
+#--------------------------------------------------------------------------------------
+  darken <- function(color, factor=1.4){
+    if (factor < 1) stop("factor needs to be > 1.0")
+    col <- col2rgb(color)
+    col <- col/factor
+    col <- rgb(t(col), maxColorValue=255)
+    col
+  }
+
+#--------------------------------------------------------------------------------------
+  lighten <- function(color, factor = 0.5) {
+    if ((factor > 1) | (factor < 0)) stop("factor needs to be within [0,1]")
+    col <- col2rgb(color)
+    col <- col + (255 - col)*factor
+    col <- rgb(t(col), maxColorValue=255)
+    col
+  }
+
+
+
