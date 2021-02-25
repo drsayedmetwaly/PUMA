@@ -5,7 +5,7 @@
 \title{Probabilistic Universal Model Approximator (PUMA)}
 
 \description{
-PUMA is a function for 3D visualization of the decision boundary of classification algorithms.
+PUMA is a function for 2D/3D visualization of the decision boundary of classification algorithms.
 }
 
 \usage{

@@ -188,7 +188,7 @@
 
           p = ggplot(grid, aes_string(x = x1n, y = x2n))
           if (hasLearnerProperties(learner, "prob") && prob.alpha2D) {
-            # max of rows is prob for selected class
+
             prob = apply(getPredictionProbabilities(pred.grid, cl = td$class.levels), 1, max)
             grid$.prob.pred.class = prob
             p = p + geom_tile(data = grid, mapping = aes_string(fill = target, alpha = ".prob.pred.class"),
@@ -197,10 +197,10 @@
           } else {
             p = p + geom_tile(mapping = aes_string(fill = target))
           }
-          # print normal points ####################################################
+
           p = p + geom_point(data = subset(pcaScores, !pcaScores$.err),
                              mapping = aes_string(x = x1n, y = x2n, shape = target), size = pointsize)
-          # mark incorrect points
+
           if (err.mark2D != "none" && any(pcaScores$.err)) {
             p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
                                mapping = aes_string(x = x1n, y = x2n, shape = target),
@@ -210,11 +210,11 @@
                                size = err.size2D + 1, col = err.col2D, show.legend = FALSE)
           }
           # print error points
-          p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
-                             mapping = aes_string(x = x1n, y = x2n, shape = target), size = err.size2D, show.legend = FALSE)
+          #p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
+          #                   mapping = aes_string(x = x1n, y = x2n, shape = target), size = err.size2D, show.legend = FALSE)
           p  = p + guides(alpha = FALSE)
 
-          ######control 2D background colors ########
+
           p = p + scale_fill_manual(values = grp.cols)
 
 
@@ -225,10 +225,6 @@
 
 
           return(p)
-
-
-
-##################
 
       }
 
