@@ -211,21 +211,21 @@
             p = p + geom_tile(mapping = aes_string(fill = target))
           }
 
-          # Plot correctly predicted points
-          p = p + geom_point(data = subset(pcaScores, !pcaScores$.err),
-                             mapping = aes_string(x = x1n, y = x2n, color  = target),
-                             size = pointsize)
-
+          # # Plot correctly predicted points
+          # p = p + geom_point(data = subset(pcaScores, !pcaScores$.err),
+          #                    mapping = aes_string(x = x1n, y = x2n, color  = target),
+          #                    size = pointsize)
+          #
           # # Plot error points
           # p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
           #                    mapping = aes_string(x = x1n, y = x2n, color  = target ),
           #                    size = err.size2D, show.legend = FALSE)
 
-          # # Plot all points
-          # p = p + geom_point(data = pcaScores,
-          #                    mapping = aes_string(x = x1n, y = x2n, color  = target),
-          #                    size = pointsize)
-          # p = p + scale_color_manual(values=pointsColor)
+          # Plot all points
+          p = p + geom_point(data = pcaScores,
+                             mapping = aes_string(x = x1n, y = x2n, color  = target),
+                             size = pointsize)
+          p = p + scale_color_manual(values=pointsColor)
 
 
           # Mark error points
@@ -237,11 +237,9 @@
             #                    mapping = aes_string(x = x1n, y = x2n),
             #                    size = err.size2D + 1, col = err.col2D, show.legend = FALSE)
             p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
-                               mapping = aes_string(x = x1n, y = x2n, color  = target),
-                               size = err.size2D, shape=13)#, col = err.col2D)
+                               mapping = aes_string(x = x1n, y = x2n),
+                               size = err.size2D, shape=13, col = err.col2D)
           }
-
-          p = p + scale_color_manual(values=pointsColor)
 
 
           p  = p + guides(alpha = FALSE)
