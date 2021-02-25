@@ -6,7 +6,7 @@
 
   PUMA = function( inputData, learner, task, measures=mmce,
                    override_default_ploting_PCs=NULL,
-                   cv = 10L,
+                   cv = 7L,
                    plot_dimensions=3,
                    pointsize = 2,
                    grp.cols = c("darkblue", "green", "darkred"),
@@ -19,9 +19,9 @@
                    spin3D_fps=20,
                    spin3D_startTime = 0,
                    output3DFileName = NULL,
-                   prob.alpha2D = TRUE, se.band2D = TRUE,
-                   err.mark2D = "train",
-                   err.col2D = "white", err.size2D = pointsize
+                   prob.alpha2D = TRUE,
+                   err.mark2D = "cv",
+                   err.col2D = "black", err.size2D = 4, err.shape2D=4
 
 
                    ) {
@@ -113,7 +113,6 @@
 
     assertNumber(pointsize, lower = 1)
     assertFlag(prob.alpha2D)
-    assertFlag(se.band2D)
     assertChoice(err.mark2D, choices = c("train", "cv", "none"))
     assertString(err.col2D)
     assertNumber(err.size2D, lower = 1)
@@ -238,7 +237,7 @@
             #                    size = err.size2D + 1, col = err.col2D, show.legend = FALSE)
             p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
                                mapping = aes_string(x = x1n, y = x2n),
-                               size = err.size2D, shape=13, col = err.col2D)
+                               size = err.size2D, shape=err.shape2D, col = err.col2D)
           }
 
 
