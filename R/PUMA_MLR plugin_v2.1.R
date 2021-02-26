@@ -391,7 +391,7 @@
 
   }
 
-#--------------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------
   loadcsv<-function(CSV_File, idCol=1, classCol=2, excludeColNo=NULL)
   {
     Load_CSV <-read.csv(CSV_File, sep=",", check.names=TRUE, stringsAsFactors=FALSE, comment.char="")
