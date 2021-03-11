@@ -10,8 +10,8 @@ PUMA is a function for 2D/3D visualization of the decision boundary of classific
 
 \usage{
 PUMA(inputData, learner, task, measures=mmce, override_default_ploting_PCs=NULL,
-cv = 7L, plot_dimensions=3, pointsize = 2, grp.cols = c("darkblue", "green", "darkred"),
-LearnerName=toupper(getLearnerShortName(learner)), contours3D, contours3Dcolors,
+cv = 7L, plot_dimensions=3, pointsize = 2, group_Colors = c("darkblue", "green", "darkred"),
+LearnerName=toupper(getLearnerShortName(learner)), decisionBoundary_Level, decisionBoundary_Color,
 engine3D="rgl", material3D="default", showTitles3D=TRUE, spin3D_axisXYZ = c(0, 0, 1),
 spin3D_duration = 30, spin3D_fps=20, spin3D_startTime = 0, output3DFileName = NULL,
 prob.alpha2D = TRUE, err.mark2D = "cv", err.col2D = "black", err.size2D = 4,
@@ -45,16 +45,16 @@ The dimensions of the output plot. This can be 2 (for a 2D plot) or 3 (for a 3D 
   \item{pointsize}{
 The size of points (scores) in the 3D PCA plot.
 }
-  \item{grp.cols}{
+  \item{group_Colors}{
 Groups colors
 }
   \item{LearnerName}{
 By default LearnerName is the classification algorithm name. This is used in the plot title.
 }
-  \item{contours3D}{
-The required numbers of decision boundaries. By default one decision boundary at 0.5 probability of class assignment is used.
+  \item{decisionBoundary_Level}{
+The required numbers of decision boundaries. By default one decision boundary at 0.5 probability of class assignment is used. Note: also the probability level of the required decision boundary(s) can be entered e.g decisionBoundary_Level = c(0.3, 0.5, 0.8)
 }
-  \item{contours3Dcolors}{
+  \item{decisionBoundary_Color}{
 Color of the 3D contours used to demarcate the decision boundary
 }
   \item{engine3D}{
@@ -139,9 +139,9 @@ trainTask <- makeClassifTask(data = PUMA_Example_Dataset1, target = "Class")
 PUMA(learner = "classif.plsdaCaret", measures=mmce, task = trainTask,
      inputData = PUMA_Example_Dataset1,
      override_default_ploting_PCs = "maxd2", cv=7, plot_dimensions=2, pointsize=2,
-     grp.cols=c("orangered","blueviolet"),
+     group_Colors=c("orangered","blueviolet"),
      LearnerName="Partial Least Squares Discriminant Analysis (PLS-DA)",
-     contours3D=1, contours3Dcolors="green", engine3D="rgl", material3D="default",
+     decisionBoundary_Level=1, decisionBoundary_Color="green", engine3D="rgl", material3D="default",
      showTitles3D=TRUE, spin3D_axisXYZ=c(0, 0, 1), spin3D_duration=30, spin3D_fps=20,
      spin3D_startTime=0, output3DFileName="PUMA3D",
      prob.alpha2D = TRUE,
@@ -159,9 +159,9 @@ trainTask <- makeClassifTask(data = PUMA_Example_Dataset2, target = "Class")
 PUMA(learner = "classif.randomForest", measures=mmce, task = trainTask,
      inputData = PUMA_Example_Dataset2,
      override_default_ploting_PCs = "maxd2", cv=7, plot_dimensions=3, pointsize=2,
-     grp.cols=c("orangered","blueviolet"),
+     group_Colors=c("orangered","blueviolet"),
      LearnerName="Partial Least Squares Discriminant Analysis (PLS-DA)",
-     contours3D=1, contours3Dcolors="green", engine3D="rgl", material3D="default",
+     decisionBoundary_Level=1, decisionBoundary_Color="green", engine3D="rgl", material3D="default",
      showTitles3D=TRUE, spin3D_axisXYZ=c(0, 0, 1), spin3D_duration=30, spin3D_fps=20,
      spin3D_startTime=0, output3DFileName="PUMA3D",
      prob.alpha2D = TRUE,
@@ -179,9 +179,9 @@ trainTask <- makeClassifTask(data = PUMA_Example_Dataset1, target = "Class")
 PUMA(learner = makeLearner("classif.svm", kernel = "polynomial"), measures=mmce,
 task = trainTask, inputData = PUMA_Example_Dataset2,
      override_default_ploting_PCs = "maxd2", cv=7, plot_dimensions=3, pointsize=2,
-     grp.cols=c("orangered","blueviolet"),
+     group_Colors=c("orangered","blueviolet"),
      LearnerName="Partial Least Squares Discriminant Analysis (PLS-DA)",
-     contours3D=1, contours3Dcolors="green", engine3D="rgl", material3D="default",
+     decisionBoundary_Level=0.5, decisionBoundary_Color="green", engine3D="rgl", material3D="default",
      showTitles3D=TRUE, spin3D_axisXYZ=c(0, 0, 1), spin3D_duration=30, spin3D_fps=20,
      spin3D_startTime=0, output3DFileName="PUMA3D",
      prob.alpha2D = TRUE,

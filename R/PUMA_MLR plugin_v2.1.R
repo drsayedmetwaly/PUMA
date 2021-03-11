@@ -4,24 +4,36 @@
 #A function for 2D/3D visualization of decision boundary for classification algorithms
 
 
-  PUMA = function( inputData, learner, task, measures=mmce,
-                   override_default_ploting_PCs=NULL,
-                   cv = 7L,
-                   plot_dimensions=3,
-                   pointsize = 2,
-                   grp.cols = c("darkblue", "green", "darkred"),
-                   LearnerName=toupper(getLearnerShortName(learner)),
-                   contours3D, contours3Dcolors, engine3D="rgl",
-                   material3D="default",
-                   showTitles3D=TRUE,
-                   spin3D_axisXYZ = c(0, 0, 1),
-                   spin3D_duration = 30,
-                   spin3D_fps=20,
-                   spin3D_startTime = 0,
-                   output3DFileName = NULL,
-                   prob.alpha2D = TRUE,
-                   err.mark2D = "cv",
-                   err.col2D = "black", err.size2D = 4, err.shape2D=4
+  PUMA = function( inputData, targetColumn="Class",
+
+                   model,
+                   model_crossValid = 7L,
+                   model_perfMetric = mmce,
+                   model_name=toupper(getLearnerShortName(model)),
+
+                   plot_dimensions = 3,
+                   plot_PCs = c("PC1","PC2","PC3"),
+                   plot_pointSize = 2,
+                   plot_groupColors = c("darkblue", "green", "darkred"),
+                   plot_dBoundary.level = 0.5,
+                   plot_dBoundary.color = "black",
+                   plot_dBoundary.size = 1,
+                   plot_dBoundary.alpha = 0.5,
+
+                   option3D_engine = "rgl",
+                   option3D_material = "default",
+                   option3D_showTitles = TRUE,
+                   option3D_spin.axisXYZ = c(0, 0, 1),
+                   option3D_spin.duration = 30,
+                   option3D_spin.fps = 20,
+                   option3D_spin.startTime = 0,
+                   option3D_outputFileName = NULL,
+
+                   option2D_bgProbAlpha = TRUE,
+                   option2D_err.mark = "cv",
+                   option2D_err.color = "black",
+                   option2D_err.pointSize = 4,
+                   option2D_err.pointShape = 4
 
 
                    ) {
@@ -30,21 +42,25 @@
     library(checkmate)
     library(Hmisc)
     library(BBmisc)
-    library(sinkr)
     library(rgl)
     library(misc3d)
 
-    learner = checkLearner(learner)
+
+    ## Create an mlr task
+    task <- makeClassifTask(data = inputData, target = targetColumn)#"Class")
+
+
+    model = checkLearner(model)
     assert(
       checkClass(task, "ClassifTask"),
     )
     td = getTaskDesc(task)
-    inputData_ClassCol<-which( colnames(inputData)=="Class")
+    inputData_ClassCol<-which( colnames(inputData)==targetColumn)#"Class")
 
     features = getTaskFeatureNames(task)
     f.no = length(features)
-    if (f.no==0) stopf("No features (metabolites) were input. Exiting...")
-    if (f.no<3) stopf("Too few features/metabolites. PUMA algorithm is designed for 2D/3D visualization of multivariate models (3 or more features/metabolites). Exiting...")
+    if (f.no==0) stopf("No features/variables were input. Exiting...")
+    if (f.no<3) stopf("Too few features/variables. PUMA algorithm is designed for 2D/3D visualization of multivariate models (3 or more features/variables). Exiting...")
 
     assertNumber(plot_dimensions,
                  na.ok = FALSE,
@@ -66,11 +82,11 @@
 
       pcaScores$Class<-as.factor(PCA_Class)
 
-      if (is.null(override_default_ploting_PCs)){
+      if (is.null(plot_PCs)){
         PCs <- c("PC1","PC2","PC3")[1:taskdim]
       }else{
-        override_default_ploting_PCs<-toupper(override_default_ploting_PCs)
-        if (override_default_ploting_PCs=="MAXD2"){
+        plot_PCs<-toupper(plot_PCs)
+        if (plot_PCs=="MAXD2"){
 
           S1 = pcaScores[which(pcaScores$Class==td$class.levels[1]),]
           S2 = pcaScores[which(pcaScores$Class!=td$class.levels[1]),]
@@ -94,7 +110,7 @@
           PCs <-colnames(pcaScores[,perMat[1,c(1:taskdim)]])
 
         }else {
-          PCs <- override_default_ploting_PCs
+          PCs <- plot_PCs
         }
 
       }
@@ -109,30 +125,30 @@
 
       unusedPCs<-setdiff(All.PCs,PCs)
 
-    cv = asCount(cv)
+    model_crossValid = asCount(model_crossValid)
 
-    assertNumber(pointsize, lower = 1)
-    assertFlag(prob.alpha2D)
-    assertChoice(err.mark2D, choices = c("train", "cv", "none"))
-    assertString(err.col2D)
-    assertNumber(err.size2D, lower = 1)
+    assertNumber(plot_pointSize, lower = 1)
+    assertFlag(option2D_bgProbAlpha)
+    assertChoice(option2D_err.mark, choices = c("train", "cv", "none"))
+    assertString(option2D_err.color)
+    assertNumber(option2D_err.pointSize, lower = 1)
 
 
     task = subsetTask(task, features = features)
-    learner = setHyperPars(learner)
+    model = setHyperPars(model)
 
     target = td$target
     data = getTaskData(task)
     y = getTaskTargets(task)
 
-    if (td$type == "classif" && hasLearnerProperties(learner, "prob"))
-      learner = setPredictType(learner, "prob")
-    mod = train(learner, task)
+    if (td$type == "classif" && hasLearnerProperties(model, "prob"))
+      model = setPredictType(model, "prob")
+    mod = train(model, task)
     pred.train = predict(mod, task)
     yhat = pred.train$data$response
-    perf.train = performance(pred.train, task = task, measures = measures)
-    if (cv > 0L) {
-      cv = crossval(learner, task, iters = cv, measures = measures, show.info = FALSE)
+    perf.train = performance(pred.train, task = task, measures = model_perfMetric)
+    if (model_crossValid > 0L) {
+      cv = crossval(model, task, iters = model_crossValid, measures = model_perfMetric, show.info = FALSE)
       perf.cv = cv$aggr
       pred.cv = cv$pred
     } else {
@@ -171,36 +187,62 @@
 
       grid[, target] = pred.grid$data$response
 
-      if (hasLearnerProperties(learner, "prob")) {
+      # if (hasLearnerProperties(model, "prob")) {
+      #   grid$value = pred.grid$data[,1]
+      # }else{
+      #   grid$value = as.numeric(as.factor(pred.grid$data[,1]))-1
+      # }
+
+
+
+      contours2D = length(plot_dBoundary.level)
+      if (sum(plot_dBoundary.level)==0){contours2D=1}
+
+      if (hasLearnerProperties(model, "prob")) {
         grid$value = pred.grid$data[,1]
       }else{
         grid$value = as.numeric(as.factor(pred.grid$data[,1]))-1
+        contours2D=1
+      }
+
+      vran <- range(grid$value)
+
+      if (mean(plot_dBoundary.level, na.rm=TRUE)>1){#number of contours entered
+        levs <- seq(vran[1], vran[2], length.out=contours2D+2)[-c(1, contours2D+2)]
+      } else {# probability levels entered
+        levs <- plot_dBoundary.level[1:contours2D]
       }
 
 
-      if (missing(grp.cols)){
+
+
+
+      if (missing(plot_groupColors)){
         pointsColor <- val2col(as.numeric(as.factor(data$Class))-1,
                                col=jetPal(length(unique(data$Class))),
                                zlim=as.numeric(as.factor(data$Class))-1)
       }else{
-        pointsColor <- grp.cols[1:length(unique(data$Class))]
+        pointsColor <- plot_groupColors[1:length(unique(data$Class))]
       }
 
       backgColor <- sapply(pointsColor, lighten, USE.NAMES=FALSE)
 
 
       # Define error points
-      pcaScores$.err = if (err.mark2D == "train")
-          y != yhat
-        else if (err.mark2D == "cv")
-          y != pred.cv$data[order(pred.cv$data$id), "response"]
-
+      # pcaScores$.err = if (option2D_err.mark == "train")
+      #     y != yhat
+      #   else if (option2D_err.mark == "cv")
+      #     y != pred.cv$data[order(pred.cv$data$id), "response"]
+      if (option2D_err.mark == "train"){ pcaScores$.err <- (y != yhat)}
+      if (option2D_err.mark == "cv") {
+        pcaScores$.err <- (y != pred.cv$data[order(pred.cv$data$id), "response"])
+      }
 
           # Initialize plot object p
           p = ggplot(grid, aes_string(x = x1n, y = x2n))
 
-          # Define background transparency
-          if (hasLearnerProperties(learner, "prob") && prob.alpha2D) {
+          # Plot background +/- transparency
+          if (hasLearnerProperties(model, "prob") && option2D_bgProbAlpha) {
             prob = apply(getPredictionProbabilities(pred.grid, cl = td$class.levels), 1, max)
             grid$.prob.pred.class = prob
             p = p + geom_tile(data = grid, mapping = aes_string(fill = target, alpha = ".prob.pred.class"),
@@ -210,34 +252,56 @@
             p = p + geom_tile(mapping = aes_string(fill = target))
           }
 
+          # Plot decision boundary
+          if (sum(plot_dBoundary.level)!=0){
+            for (i in 1:contours2D){
+              grid$.contour<-(grid$value<levs[i]+0.005 & grid$value>levs[i]-0.005) #levs[i])
+
+              tryCatch(
+                {
+                  p = p + geom_smooth(data = subset(grid, grid$.contour),
+                                      mapping = aes_string(x = x1n, y = x2n),
+                                      #method = "gam",
+                                      size = plot_dBoundary.size[i],
+                                      color = plot_dBoundary.color[i],
+                                      alpha = plot_dBoundary.alpha[i],
+                                      se = FALSE)
+                },
+                error = function(e) {}
+
+              )
+
+            }
+
+          }
+
           # # Plot correctly predicted points
           # p = p + geom_point(data = subset(pcaScores, !pcaScores$.err),
           #                    mapping = aes_string(x = x1n, y = x2n, color  = target),
-          #                    size = pointsize)
+          #                    size = plot_pointSize)
           #
           # # Plot error points
           # p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
           #                    mapping = aes_string(x = x1n, y = x2n, color  = target ),
-          #                    size = err.size2D, show.legend = FALSE)
+          #                    size = option2D_err.pointSize, show.legend = FALSE)
 
           # Plot all points
           p = p + geom_point(data = pcaScores,
                              mapping = aes_string(x = x1n, y = x2n, color  = target),
-                             size = pointsize)
+                             size = plot_pointSize)
           p = p + scale_color_manual(values=pointsColor)
 
-
           # Mark error points
-          if (err.mark2D != "none" && any(pcaScores$.err)) {
+          if (option2D_err.mark != "none" && any(pcaScores$.err)) {
             # p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
             #                    mapping = aes_string(x = x1n, y = x2n),
-            #                    size = err.size2D + 1.5, show.legend = FALSE)
+            #                    size = option2D_err.pointSize + 1.5, show.legend = FALSE)
             # p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
             #                    mapping = aes_string(x = x1n, y = x2n),
-            #                    size = err.size2D + 1, col = err.col2D, show.legend = FALSE)
+            #                    size = option2D_err.pointSize + 1, col = option2D_err.color, show.legend = FALSE)
             p = p + geom_point(data = subset(pcaScores, pcaScores$.err),
                                mapping = aes_string(x = x1n, y = x2n),
-                               size = err.size2D, shape=err.shape2D, col = err.col2D)
+                               size = option2D_err.pointSize, shape=option2D_err.pointShape, col = option2D_err.color)
           }
 
 
@@ -247,13 +311,14 @@
           p = p + scale_fill_manual(values = backgColor)
 
 
-          title = sprintf("%s: %s", LearnerName, paramValueToString(learner$par.set, learner$par.vals))
-          title = sprintf("%s\nTrain: %s; CV: %s", title, paste(names(perf.train),": ",perf.train, sep=""),
+          title = sprintf("%s: %s", model_name, paramValueToString(model$par.set, model$par.vals))
+          title = sprintf("%s\nTrain: %s; model_crossValid: %s", title, paste(names(perf.train),": ",perf.train, sep=""),
                           paste(names(perf.cv),": ",perf.cv, sep=""))
           p = p + ggtitle(title)
 
 
-          return(p)
+          #return(p)
+          suppressMessages(print(p))
 
       }
 
@@ -295,28 +360,36 @@
 
     grid[, target] = pred.grid$data$response
 
-        if (hasLearnerProperties(learner, "prob")) {
+    contours3D = length(plot_dBoundary.level)
+
+
+        if (hasLearnerProperties(model, "prob")) {
           grid$value = pred.grid$data[,1]
         }else{
           grid$value = as.numeric(as.factor(pred.grid$data[,1]))-1
           contours3D=1
         }
 
-          vran <- range(grid$value)
-          levs <- seq(vran[1], vran[2], length.out=contours3D+2)[-c(1, contours3D+2)]
+    vran <- range(grid$value)
 
-          if (missing(contours3Dcolors)){
+    if (mean(plot_dBoundary.level, na.rm=TRUE)>1){#number of contours entered
+         levs <- seq(vran[1], vran[2], length.out=contours3D+2)[-c(1, contours3D+2)]
+    } else {# probability levels entered
+         levs <- plot_dBoundary.level[1:contours3D]
+    }
+
+          if (missing(plot_dBoundary.color)){
             levcols <- val2col(levs, jetPal(contours3D), zlim = vran)
           }else{
-            levcols <- contours3Dcolors[contours3D]
+            levcols <- plot_dBoundary.color[1:contours3D]
           }
 
-          if (missing(grp.cols)){
+          if (missing(plot_groupColors)){
             pointsColor <- val2col(as.numeric(as.factor(data$Class))-1,
                                    col=jetPal(length(unique(data$Class))),
                                    zlim=as.numeric(as.factor(data$Class))-1)
           }else{
-            pointsColor <- grp.cols[1:length(unique(data$Class))]
+            pointsColor <- plot_groupColors[1:length(unique(data$Class))]
           }
 
           fun <- function(x,y,z){return(grid$value)}
@@ -325,8 +398,8 @@
           ylab = colnames(grid)[2]
           zlab = colnames(grid)[3]
 
-          title = sprintf("%s: %s", LearnerName, paramValueToString(learner$par.set, learner$par.vals))
-          subtitle = sprintf("Train: %s; CV: %s", paste(names(perf.train),": ",perf.train, sep=""),
+          title = sprintf("%s: %s", model_name, paramValueToString(model$par.set, model$par.vals))
+          subtitle = sprintf("Train: %s; model_crossValid: %s", paste(names(perf.train),": ",perf.train, sep=""),
                           paste(names(perf.cv),": ",perf.cv, sep=""))
 
 
@@ -340,18 +413,40 @@
                                col=ifelse(pcaScores$Class==td$class.levels[1], pointsColor[1],
                                            ifelse(pcaScores$Class==td$class.levels[2], pointsColor[2],
                                                    pointsColor[3])),
-                               radius = pointsize/10))
+                               radius = plot_pointSize/10))
 
-          contour3d(fun, level = levs,
-                    x=xs, y=ys, z=zs,
-                    color=levcols, material=material3D,
-                    engine=engine3D, add=TRUE, alpha=0.5
-          )
+          # Plot decision boundary
+          if (sum(plot_dBoundary.level)!=0){
+            for (i in 1:contours3D){
+              tryCatch(
+                {
+                  contour3d(fun, level = levs[i],
+                            x=xs, y=ys, z=zs,
+                            color=levcols[i], material=option3D_material,
+                            engine=option3D_engine, add=TRUE, alpha=plot_dBoundary.alpha[i]
+                  )
+                },
+                error = function(e) { message(paste("Could not plot decision boundary at level [",levs[i],"]. ", e))
+                  }
+              )
+
+            }
+
+          }
+
+
+
+
+          # contour3d(fun, level = levs,
+          #           x=xs, y=ys, z=zs,
+          #           color=levcols, material=option3D_material,
+          #           engine=option3D_engine, add=TRUE, alpha=plot_dBoundary.alpha
+          # )
 
           axes3d(edges = "bbox", labels = TRUE, tick = TRUE,
                  box = TRUE, expand = 1.03)
 
-          if (showTitles3D==TRUE){
+          if (option3D_showTitles==TRUE){
             title3d(title, subtitle, xlab, ylab, zlab)
           } else {
             title3d("", "", xlab, ylab, zlab)
@@ -361,15 +456,15 @@
                    col = pointsColor, cex=1, inset=c(0.02))
 
 
-            if (spin3D_duration==0){
-              snapshot(output3DFileName=output3DFileName)
+            if (option3D_spin.duration==0){
+              snapshot(option3D_outputFileName=option3D_outputFileName)
 
             }else{
-              animation(spin3D_axisXYZ=spin3D_axisXYZ,
-                        spin3D_duration=spin3D_duration,
-                        spin3D_fps=spin3D_fps,
-                        spin3D_startTime=spin3D_startTime,
-                        output3DFileName=output3DFileName)
+              animation(option3D_spin.axisXYZ=option3D_spin.axisXYZ,
+                        option3D_spin.duration=option3D_spin.duration,
+                        option3D_spin.fps=option3D_spin.fps,
+                        option3D_spin.startTime=option3D_spin.startTime,
+                        option3D_outputFileName=option3D_outputFileName)
             }
 
 
@@ -386,8 +481,6 @@
                        "deepnet", "SwarmSVM", "gbm", "MASS", "nnet", "deepnet",
                        "xgboost", "kernlab", "survival","RWeka", "rpart","fpc",
                        "FNN", "h2o", "gbm", "klaR", "modeltools", "ICSNP", "BBmisc"))
-    library(devtools)
-    devtools::install_github("marchtaylor/sinkr", force = TRUE)
 
   }
 
@@ -415,29 +508,29 @@
   }
 
 #--------------------------------------------------------------------------------------
-  snapshot<-function(output3DFileName){
+  snapshot<-function(option3D_outputFileName){
     timeStamp <-  strftime(Sys.time(),"%Y-%m-%d_%H.%M.%S")
     FileNameSuffix = sprintf("_%s",timeStamp)
 
-    if(!is.null(output3DFileName)){
-    snapshot3d(paste(output3DFileName,FileNameSuffix,".png",sep=""))
+    if(!is.null(option3D_outputFileName)){
+    snapshot3d(paste(option3D_outputFileName,FileNameSuffix,".png",sep=""))
     }
   }
 
 #--------------------------------------------------------------------------------------
-  animation<-function(spin3D_axisXYZ=c(0, 0, 1), spin3D_duration=30, spin3D_fps=20, spin3D_startTime=0, output3DFileName=NULL){
+  animation<-function(option3D_spin.axisXYZ=c(0, 0, 1), option3D_spin.duration=30, option3D_spin.fps=20, option3D_spin.startTime=0, option3D_outputFileName=NULL){
     timeStamp <-  strftime(Sys.time(),"%Y-%m-%d_%H.%M.%S")
     FileNameSuffix = sprintf("_%s",timeStamp)
 
-    if (!is.null(output3DFileName)){
-      movie3d(spin3d(axis = spin3D_axisXYZ), duration = spin3D_duration,
-              fps=spin3D_fps,movie = paste(output3DFileName,FileNameSuffix,sep=""),
-              frames = output3DFileName,
+    if (!is.null(option3D_outputFileName)){
+      movie3d(spin3d(axis = option3D_spin.axisXYZ), duration = option3D_spin.duration,
+              fps=option3D_spin.fps,movie = paste(option3D_outputFileName,FileNameSuffix,sep=""),
+              frames = option3D_outputFileName,
               convert = TRUE, clean = TRUE, verbose = FALSE,top = TRUE,
-              type = "gif", startTime = spin3D_startTime, dir = getwd())
+              type = "gif", startTime = option3D_spin.startTime, dir = getwd())
     } else {
-      play3d(spin3d(axis = spin3D_axisXYZ), duration = spin3D_duration,
-             startTime = spin3D_startTime)
+      play3d(spin3d(axis = option3D_spin.axisXYZ), duration = option3D_spin.duration,
+             startTime = option3D_spin.startTime)
 
     }
   }
@@ -477,5 +570,28 @@
     col
   }
 
+#--------------------------------------------------------------------------------------
+# val2col: Convert values to color levels
+# In marchtaylor/sinkr: Collection of functions with emphasis in multivariate data analysis
 
+val2col <-  function (z, zlim, col = heat.colors(12), breaks)
+  {
+    if (!missing(breaks)) {
+      if (length(breaks) != (length(col) + 1)) {
+        stop("must have one more break than color")
+      }
+    }
+    if (missing(breaks) & !missing(zlim)) {
+      breaks <- seq(zlim[1], zlim[2], length.out = (length(col) +
+                                                      1))
+    }
+    if (missing(breaks) & missing(zlim)) {
+      zlim <- range(z, na.rm = TRUE)
+      breaks <- seq(zlim[1], zlim[2], length.out = (length(col) +
+                                                      1))
+    }
+    CUT <- cut(z, breaks = breaks, include.lowest = TRUE)
+    colorlevels <- col[match(CUT, levels(CUT))]
+    return(colorlevels)
+  }
 
