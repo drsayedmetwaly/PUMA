@@ -12,7 +12,7 @@
                    model_name=toupper(getLearnerShortName(model)),
 
                    plot_dimensions = 3,
-                   plot_PCs = c("PC1","PC2","PC3"),
+                   plot_PCs = "default",
                    plot_pointSize = 2,
                    plot_groupColors = c("darkblue", "green", "darkred"),
                    plot_dBoundary.level = 0.5,
@@ -82,10 +82,10 @@
 
       pcaScores$Class<-as.factor(PCA_Class)
 
-      if (is.null(plot_PCs)){
+      plot_PCs<-toupper(plot_PCs)
+      if (plot_PCs=="DEFAULT"){
         PCs <- c("PC1","PC2","PC3")[1:taskdim]
       }else{
-        plot_PCs<-toupper(plot_PCs)
         if (plot_PCs=="MAXD2"){
 
           S1 = pcaScores[which(pcaScores$Class==td$class.levels[1]),]
@@ -249,6 +249,7 @@
                               show.legend = TRUE)
             p = p + scale_alpha(limits = range(grid$.prob.pred.class))
           } else {
+            backgColor <- sapply(backgColor, lighten, USE.NAMES=FALSE)
             p = p + geom_tile(mapping = aes_string(fill = target))
           }
 
