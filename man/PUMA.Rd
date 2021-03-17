@@ -169,14 +169,14 @@ The built-in function \code{\link{loadcsv}} can import data sets from CSV files 
 
 \examples{
 
-## Example 1: Fit a PLS-DA model and plot it in 2D using PUMA
+## Example 1: Fit a PLS-DA model on mice data set and plot it in 2D using PUMA
 
 ## Load libraries
 library(PUMA)
 
-## Fit a 2D PLS-DA model, plot it, do animation and save the output as an animated GIF file
+## Fit PLS-DA model, plot it in 2D
 PUMA(
-     inputData = PUMA::PUMA_Example_Dataset1, targetColumn="Class",
+     inputData = PUMA::mice, targetColumn="Class",
 
      model = "classif.plsdaCaret",
      model_perfMetric=mmce, model_crossValid=7,
@@ -201,14 +201,14 @@ PUMA(
 
 
 
-## Example 2: Fit an RF model and plot it in 3D using PUMA
+## Example 2: Fit an RF model on mice data set and plot it in 3D using PUMA
 
 ## Load libraries
 library(PUMA)
 
-## Fit a 3D RF model, plot it, do animation and save the output as an animated GIF file
+## Fit a RF model, plot it, do animation and save the output as an animated GIF file
 PUMA(
-     inputData = PUMA::PUMA_Example_Dataset1, targetColumn="Class",
+     inputData = PUMA::mice, targetColumn="Class",
 
      model = "classif.randomForest",
      model_perfMetric=mmce, model_crossValid=7,
@@ -233,14 +233,14 @@ PUMA(
 
 
 
-## Example 3: Fit an SVM (polynomial kernel) model and plot it using PUMA
+## Example 3: Fit an SVM (polynomial kernel) model on mice data set and plot it using PUMA
 
 ## Load libraries
 library(PUMA)
 
 ## Fit a 3D SVM (polynomial kernel) model, plot decision boundary (at .50 probabilty) and other contours at 0.025 and 0.975 probabilities, do animation and save the output as an animated GIF file
 PUMA(
-     inputData = PUMA::PUMA_Example_Dataset1, targetColumn="Class",
+     inputData = PUMA::mice, targetColumn="Class",
      model = makeLearner("classif.svm", kernel = "polynomial"),
      model_perfMetric=mmce, model_crossValid=7,
      model_name="Support Vector Machine (SVM) with a polynomial kernel",
@@ -265,6 +265,33 @@ PUMA(
 
 }
 
+\Datasets{
+PUMA package contains 4 normalized data sets:
+\item{arcene}{
+This is a normalized version of the publically available Arcene mass-spectrometry data set which contains 9961 variables and compares the mass spectrometry data of cancer (1, n=88) versus normal subjects (2, n=112). Noteworthy, the Arcene dataset was one of the datasets used in Neural Information Processing Systems (NIPS) 2003 Feature Selection Challenge and contains 3000 'probes' - added distractor features (of random orders and patterns) that are having no predictive power (pure noise).
+
+For more details about Arcene data set see \url{ https://archive.ics.uci.edu/ml/datasets/Arcene }
+}
+
+\item{coffee}{
+This is a normalized verion of the Coffee data set which contains nuclear magnetic resonance (NMR) profiles of Colombian (n=15) vs non-Colombian (n=19) coffee bean samples using 1175 normalized spectral bins.
+
+For more details about Coffee data set see \url{ https://doi.org/10.1155/2016/8564584 }
+}
+
+\item{diabetes}{
+This is a normalized verion of The Qatar Metabolomics Study on Diabetes (QMDiab)publicly available data set containing untargeted plasma metabolomics (LC/MS+, LC/MS-, and GC/MS) from 179 diabetic patients and 177 non-diabetic normal controls.
+
+For more details about QMDiab data set see \url{ https://doi.org/10.6084/m9.figshare.5904022.v5 }
+}
+
+\item{mice}{
+This is a normalized version of the Mice data set which compares the difference in 28 proteins between control mice (c-SC-s: control mice, not stimulated to learn, injected with saline. n=135) and mice with trisomy 21 i.e. Down syndrome (t-CS-m: trisomy mice, stimulated to learn, injected with memantine. n=135).
+
+For more details about Mice data set see \url{ https://doi.org/10.6084/m9.figshare.1421985.v1 }
+}
+
+}
 
 \keyword{ PUMA }
 \keyword{ PCA reversal }
