@@ -100,7 +100,8 @@
               {
                 Dist[i]<-D.sq(S1[,perMat[i,]],S2[,perMat[i,]])[['D.sq']]
               },
-              error = function(e) {}
+              error = function(e) {},
+              warning=function(e) {}
 
             )
 
@@ -268,7 +269,8 @@
                                       alpha = plot_dBoundary.alpha[i],
                                       se = FALSE)
                 },
-                error = function(e) {}
+                error = function(e) {},
+                warning=function(e) {}
 
               )
 
@@ -428,7 +430,8 @@
                   )
                 },
                 error = function(e) { message(paste("Could not plot decision boundary at level [",levs[i],"]. ", e))
-                  }
+                  },
+                warning=function(e) {}
               )
 
             }

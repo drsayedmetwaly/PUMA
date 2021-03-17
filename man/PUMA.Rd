@@ -161,10 +161,12 @@ Sayed Metwaly, \email{sayed.metwaly@abdn.ac.uk}
 PUMA depends on the following packages devtools, mlr, checkmate, Hmisc, rgl, misc3d and sinkr. The built-in function installdep() can be used to install all the required dependency packages before running PUMA for the first time. Installation of ImageMagick program is required to save PUMA animations as animated GIF files.
 The built-in function \code{\link{loadcsv}} can import data sets from CSV files and prepare them for direct use in PUMA. PUMA 3D plots are interactive and can be manipulated using the mouse. The built-in function \code{\link{snapshot}} can be used to take a snapshot of the current view. The function \code{\link{animation}} makes 3D spining rotations of the PUMA visualization and can save them as animated GIF files. Installation of ImageMagick program is required to save PUMA animations as animated GIF files. If the PUMA visualization window is closed, it will not be possible to make animations or take snapshots.
 
+PUMA package contains 4 internal data sets: \code{\link{arcene}}, \code{\link{coffee}}, \code{\link{diabetes}} and \code{\link{mice}}
 }
 
 \seealso{
-\code{\link{loadcsv}}, \code{\link{snapshot}}, \code{\link{animation}}
+Functions: \code{\link{loadcsv}}, \code{\link{snapshot}} and \code{\link{animation}}
+Internal data sets: \code{\link{arcene}}, \code{\link{coffee}}, \code{\link{diabetes}} and \code{\link{mice}}
 }
 
 \examples{
@@ -265,33 +267,6 @@ PUMA(
 
 }
 
-\Datasets{
-PUMA package contains 4 normalized data sets:
-\item{arcene}{
-This is a normalized version of the publically available Arcene mass-spectrometry data set which contains 9961 variables and compares the mass spectrometry data of cancer (1, n=88) versus normal subjects (2, n=112). Noteworthy, the Arcene dataset was one of the datasets used in Neural Information Processing Systems (NIPS) 2003 Feature Selection Challenge and contains 3000 'probes' - added distractor features (of random orders and patterns) that are having no predictive power (pure noise).
-
-For more details about Arcene data set see \url{ https://archive.ics.uci.edu/ml/datasets/Arcene }
-}
-
-\item{coffee}{
-This is a normalized verion of the Coffee data set which contains nuclear magnetic resonance (NMR) profiles of Colombian (n=15) vs non-Colombian (n=19) coffee bean samples using 1175 normalized spectral bins.
-
-For more details about Coffee data set see \url{ https://doi.org/10.1155/2016/8564584 }
-}
-
-\item{diabetes}{
-This is a normalized verion of The Qatar Metabolomics Study on Diabetes (QMDiab)publicly available data set containing untargeted plasma metabolomics (LC/MS+, LC/MS-, and GC/MS) from 179 diabetic patients and 177 non-diabetic normal controls.
-
-For more details about QMDiab data set see \url{ https://doi.org/10.6084/m9.figshare.5904022.v5 }
-}
-
-\item{mice}{
-This is a normalized version of the Mice data set which compares the difference in 28 proteins between control mice (c-SC-s: control mice, not stimulated to learn, injected with saline. n=135) and mice with trisomy 21 i.e. Down syndrome (t-CS-m: trisomy mice, stimulated to learn, injected with memantine. n=135).
-
-For more details about Mice data set see \url{ https://doi.org/10.6084/m9.figshare.1421985.v1 }
-}
-
-}
 
 \keyword{ PUMA }
 \keyword{ PCA reversal }
